@@ -2,6 +2,18 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.7.
 
+##
+```bash
+ng add @ng-bootstrap/ng-bootstrap
+ng generate service achievement-data
+ng generate component main
+ng generate component topbar
+ng generate component menu
+ng generate component client
+ng generate component NoData
+ng generate component NotFound
+```
+
 ## Development server
 
 To start a local development server, run:
