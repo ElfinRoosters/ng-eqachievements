@@ -1,1 +1,26 @@
-<p>menu works!</p>
+<aside>
+    <div>
+        <div ngbAccordion #accordion="ngbAccordion">
+            @for (item of menu; track item ; let i = $index) {
+            <div ngbAccordionItem="menu{{ i + 1 }}">
+                <h2 ngbAccordionHeader>
+                    <button ngbAccordionButton>{{ item.name }}</button>
+                </h2>
+                <div ngbAccordionCollapse class="">
+                    <div ngbAccordionBody class="">
+                        <ng-template>
+                            <ol>
+                                @for (cat of item.children ; track cat) {
+                                <li><a [routerLink]="cat.routerLink" [skipLocationChange]="true" routerLinkActive="active">{{ cat.name }}</a></li>
+                                }
+                            </ol>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+        <button class="btn btn-sm btn-outline-primary me-2" (click)="accordion.expandAll()">Expand all</button>
+        <button class="btn btn-sm btn-outline-primary me-2" (click)="accordion.collapseAll()">Collapse all</button>
+    </div>
+</aside>

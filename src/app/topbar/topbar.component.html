@@ -1,1 +1,10 @@
-<p>topbar works!</p>
+<nav class="navbar sticky-top bg-body-tertiary">
+    <div class="container-fluid">
+        <a [routerLink]="['/']" class="navbar-brand" aria-label="Everquest Achievements Logo"></a>
+        <form class="d-flex">
+            <input type="file" id="file-input" multiple="true" accept=".txt" class="form-control me-2"
+                (change)="onFileSelected($event)" #fileInput />
+            <button class="btn btn-outline-primary text-nowrap" (click)="loadFiles($event)">Load Files</button>
+        </form>
+    </div>
+</nav>
