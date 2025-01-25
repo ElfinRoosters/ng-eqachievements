@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgbAccordionModule, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { default as MenuData } from './menu.json';
 import { AchievementDataService } from '../achievement-data.service';
 
 export interface MenuItem {
@@ -29,7 +28,7 @@ export class MenuComponent {
   menu!: MenuItem[];
 
   constructor(private dataService: AchievementDataService) {
-    this.menu = MenuData.data;
+    this.menu = dataService.menuData.data;
 
   }
 

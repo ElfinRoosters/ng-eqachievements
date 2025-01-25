@@ -13,7 +13,7 @@
                         @for (cat of item.children ; track cat) {
                         <li class="list-group-item">
                             <button type="button" class="list-group-item list-group-item-action btn btn-custom text-secondary"
-                             [routerLink]="cat.routerLink" [skipLocationChange]="true" routerLinkActive="active">{{ cat.name }}</button>
+                             [routerLink]="['/category',item.id,'achievement',cat.id]" [skipLocationChange]="true" routerLinkActive="active">{{ cat.name }}</button>
                         </li>
                         }
                         </ul>
