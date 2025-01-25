@@ -1,11 +1,13 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, GuardResult, MaybeAsync, Router, RouterStateSnapshot } from '@angular/router';
 import { AchievementData } from './achievement-data';
-import { EQState } from './eqstate.status';
+import { convertToEQStateEnum, EQState } from './eqstate.status';
+import { AchievementState } from './achievement-state.data';
+import { ParseState } from './parse-state.data';
 
 export class EQCharacter {
   constructor(
-    public character:string,
+    public name:string,
     public server:string,
   ){}
 }
@@ -16,15 +18,6 @@ export class AchievementFile {
       public text:string,
   ){}
 }
-
-interface ParseState {
-  category: string;
-  categoryID?: number;
-  achievement: string;
-  achievementID?: number;
-  task: string;
-  component: string;
-};
 
 interface EQBaseType {
   id: number;
@@ -159,66 +152,41 @@ export class AchievementDataService extends AchievementData implements CanActiva
         }
         psState = {} as ParseState;
         psState.category = line.substring(0, pos);
-        psState.categoryID = this.getCategoryID(psState.category);
         psState.achievement = line.substring(pos + 2);
-        psState.achievementID = this.getAchievementID(psState.category, psState.achievement);
         console.log('psState: %s', JSON.stringify(psState));
         continue;
       }
 
       // We have an achievement!
-      const el = {} as EQAchievementData;
-      const state = line.charAt(0);
-      switch (state) {
-        case 'L':
-          el.state = EQState.Locked;
-          break;
-        case 'C':
-          el.state = EQState.Completed;
-          break;
-        case 'I':
-          el.state = EQState.Incomplete;
-          break;
-      }
+      const state = AchievementState.fromParseState(psState);
+      state.state = convertToEQStateEnum(line.charAt(0));
 
       if (line.charCodeAt(2) == 9) {
         // [LCI]\t\t
-        var achievement = line.substring(3);
+        var task = line.substring(3);
         var count = 0;
         var total = 0;
-        var optional = 0;
 
         //console.log('2: [' + achievement + ']');
-        const match = reUnfinished.exec(achievement);
+        const match = reUnfinished.exec(task);
 
         if (match) {
           // console.log("match: " + match[2] + "/" + match[3]);
-          achievement = match[1];
+          task = match[1];
           count = parseInt(match[2]);
           total = parseInt(match[3]);
         }
-        //console.log("achievement: " + achievement);
-        if (achievement.startsWith('(Optional) ')) {
-          achievement = achievement.substring('(Optional) '.length);
-          optional = 1;
-        }
+        //console.log("task: " + task);
+        psState.task = task;
 
-        achievement = this.checkAchievementRename(psState, achievement);
-        psState.component = achievement;
-
-        const el = new Map<string,any>([
-          ['state', state],
-          ['count', count],
-          ['total', total],
-          ['optional', optional],
-        ]);
       } else if (line.charCodeAt(1) == 9) {
         // [LCI]\t
         console.log('1: [' + line.substring(2) + ']');
-        psState.task = line.substring(2);
+        psState.client = line.substring(2);
+
       }
 
-      console.log("psState: %s, el: %s, character: %s", JSON.stringify(psState), JSON.stringify(el), character);
+      console.log("psState: %s, state: %s, character: %s", JSON.stringify(psState), JSON.stringify(state), character);
       //this.setData(psState, el, character);
 
     }

@@ -1,6 +1,7 @@
 import { default as MenuData } from './menu.json';
 
 export class AchievementData {
+    constructor(){}
     heroicAAs = new Map([
         ['Call of the Forsaken', new Map([
             ['Conquests', new Map([
@@ -270,8 +271,8 @@ export class AchievementData {
 
     menuData = MenuData;
 
-    getCategoryID(category:string) {
-        for(const cat of this.menuData.data) {
+    static getCategoryID(category:string) {
+        for(const cat of MenuData.data) {
             if (cat.name === category) {
                 return cat.id;
             }
@@ -279,8 +280,8 @@ export class AchievementData {
         return -1;
     }
 
-    getAchievementID(category:string, name:string) {
-        for(const cat of this.menuData.data) {
+    static getAchievementID(category:string, name:string) {
+        for(const cat of MenuData.data) {
             if (cat.name !== category) { continue; }
             for (const subcat of cat.children) {
                 if (subcat.name === name) {
@@ -291,5 +292,4 @@ export class AchievementData {
         }
         return -1;
     }
-
 }
