@@ -1,6 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, GuardResult, MaybeAsync, Router, RouterStateSnapshot } from '@angular/router';
 import { AchievementData } from './achievement-data';
+import { EQState } from './eqstate.status';
 
 export class EQCharacter {
   constructor(
@@ -14,12 +15,6 @@ export class AchievementFile {
       public eqCharacter:EQCharacter,
       public text:string,
   ){}
-}
-
-enum EQState {
-  Incomplete,
-  Completed,
-  Locked
 }
 
 interface ParseState {
@@ -223,7 +218,7 @@ export class AchievementDataService extends AchievementData implements CanActiva
         psState.task = line.substring(2);
       }
 
-      //console.log("psState: %s, el: %s, character: %s", JSON.stringify(psState), JSON.stringify(el), character);
+      console.log("psState: %s, el: %s, character: %s", JSON.stringify(psState), JSON.stringify(el), character);
       //this.setData(psState, el, character);
 
     }
