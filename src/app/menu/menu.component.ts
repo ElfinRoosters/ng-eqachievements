@@ -1,9 +1,8 @@
 import { Component, inject } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
-import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { NgbAccordionModule, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { default as MenuData } from './menu.json';
 import { AchievementDataService } from '../achievement-data.service';
-import { Observable, switchMap } from 'rxjs';
 
 export interface MenuItem {
   name?: string;
@@ -19,7 +18,7 @@ export interface MenuItem {
 
 @Component({
   selector: 'app-menu',
-  imports: [NgbAccordionModule, RouterLink],
+  imports: [RouterLink, NgbAccordionModule, NgbTooltip],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.sass'
 })

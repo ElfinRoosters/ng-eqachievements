@@ -1,19 +1,19 @@
 <aside>
     <div>
         <div ngbAccordion #accordion="ngbAccordion">
-            @for (item of menu; track item ; let i = $index) {
-            <div ngbAccordionItem="menu{{ i + 1 }}">
-                <h2 ngbAccordionHeader>
-                    <button ngbAccordionButton>{{ item.name }}</button>
+            @for (item of menu; track item) {
+            <div ngbAccordionItem="menu{{ item.id }}">
+                <h2 ngbAccordionHeader class="">
+                    <button ngbAccordionButton placement="top" ngbTooltip="{{ item.tooltip }}" [openDelay]="1000" triggers="hover">{{ item.name }}</button>
                 </h2>
                 <div ngbAccordionCollapse class="">
                     <div ngbAccordionBody class="">
                         <ng-template>
-                            <ol>
+                            <ul class="list-group">
                                 @for (cat of item.children ; track cat) {
-                                <li><a [routerLink]="cat.routerLink" [skipLocationChange]="true" routerLinkActive="active">{{ cat.name }}</a></li>
+                                <li class="list-group-item"><a [routerLink]="cat.routerLink" [skipLocationChange]="true" routerLinkActive="active">{{ cat.name }}</a></li>
                                 }
-                            </ol>
+                            </ul>
                         </ng-template>
                     </div>
                 </div>
