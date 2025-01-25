@@ -1,18 +1,14 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgbAccordionModule, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { AchievementDataService } from '../achievement-data.service';
+import { GameData } from '../game-data.data';
 
 export interface MenuItem {
-  name?: string;
-  icon?: string;
-  tooltip?: string;
+  name: string;
+  tooltip: string;
   children?: MenuItem[];
-  routerLink?: string;
-  href?: string;
-  badge?: string;
-  id?: number;
-  order?: number;
+  id: number;
+  order: number;
 }
 
 @Component({
@@ -27,8 +23,8 @@ export class MenuComponent {
 
   menu!: MenuItem[];
 
-  constructor(private dataService: AchievementDataService) {
-    this.menu = dataService.menuData.data;
+  constructor() {
+    this.menu = GameData.makeMenuData() as MenuItem[];
 
   }
 
