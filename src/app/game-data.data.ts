@@ -18,7 +18,7 @@ export class GameData {
         }
 
         // Add the sub-level categories.
-        for (const row of AchievementCategories.data.filter((row) => row[0] != 0 )) {
+        for (const row of AchievementCategories.data.filter((row) => row[0] != 0)) {
             const parent = data.find((item) => item.id == row[0]);
             if (parent === undefined) { continue }
 
@@ -33,45 +33,62 @@ export class GameData {
         return data;
     }
 
-    static getCategoryID(category:string): number | undefined {
-        const el =  AchievementCategories.data.find((row) => row[3] === category);
-        if (el === undefined) { return undefined }
-
-        if (typeof el[2] === 'string') {
-            return parseInt(el[2]);
+    static getCategoryID(category: string): number {
+        const el = AchievementCategories.data.filter((row) => row[0] == 0).find((row) => row[3] === category);
+        if (el === undefined) {
+            throw new Error("Invalid category: " + category);
         }
-        return el[2];
+
+        return el[2] as number;
     }
 
-    static getAchievementID(category:string, name:string): number | undefined {
-        const el =  AchievementCategories.data.find((row) => row[3] === category);
-        if (el === undefined) { return undefined }
+    static getAchievementID(category1: string, category2: string): number {
+        const categoryID = this.getCategoryID(category1);
 
-        const ael = AchievementCategories.data.find((row) => row[3] === name && row[0] == el[0]);
-        if (ael === undefined) { return undefined }
-
-        if (typeof ael[2] === 'string') {
-            return parseInt(ael[2]);
+        const ael = AchievementCategories.data.find((row) => row[3] === category2 && row[0] == categoryID);
+        if (ael === undefined) {
+            throw new Error("Invalid category/subcategory: " + category1 + "/" + category2);
         }
-        return ael[2];
+
+        return ael[2] as number;
     }
 
-    static getClientIDs(aid:number) {
+    static getCategoryPair(category1: string, category2: string): number[] {
+        const categoryID = this.getCategoryID(category1);
+
+        const el = AchievementCategories.data.find((row) => row[3] === category2 && row[0] == categoryID);
+        if (el === undefined) {
+            throw new Error("Invalid category/subcategory: " + category1 + "/" + category2);
+        }
+
+        return [categoryID, el[2] as number]
+    }
+
+    static getClientIDsForAchievement(aid: number) {
         const data: number[] = [];
-        console.log("getClientIDs(): aid:", aid);
+        //console.log("getClientIDs(): aid:", aid);
         AchievementCategoryAssociationsClient.data.filter((row) => row[0] == aid).forEach((v) => {
             data.push(v[2]);
         });
         return data;
     }
 
-    static getClients(ids:number[]) {
+    static getClients(ids: number[]) {
         const data = [];
         return AchievementsClient.data.filter((row) => {
-            if (typeof row[0] === 'string') {
-                return ids.includes(parseInt(row[0]));
-            }
-            return ids.includes(row[0])
+            return ids.includes(row[0] as number)
         });
+    }
+
+    static getClientID(category1ID: number, category2ID: number, arg2: string): number {
+        const clientIDs = this.getClientIDsForAchievement(category2ID);
+        AchievementsClient.data.filter((row) => {
+
+        });
+
+        return -1;
+    }
+    static getComponentID(category1ID: number, category2ID: number, clientID: number | undefined, component: string): number | undefined {
+        throw new Error('Method not implemented.');
     }
 }

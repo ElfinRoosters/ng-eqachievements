@@ -4,6 +4,7 @@ import { AchievementData } from './achievement-data';
 import { convertToEQStateEnum, EQState } from './eqstate.status';
 import { AchievementState } from './achievement-state.data';
 import { ParseState } from './parse-state.data';
+import { GameData } from './game-data.data';
 
 export class EQCharacter {
   constructor(
@@ -116,6 +117,10 @@ export class AchievementDataService extends AchievementData implements CanActiva
     const reAchievement = /^[LCI]\s/;
     const reUnfinished = new RegExp("^(.*?)\\t(\\d+)/(\\d+)$");
     var psState = {} as ParseState;
+    var category1ID: number | undefined;
+    var category2ID: number | undefined;
+    var clientID: number | undefined;
+    var componentID: number | undefined;
     console.log('(starting) psState:',psState);
 
     for (const line of lines) {
@@ -128,41 +133,42 @@ export class AchievementDataService extends AchievementData implements CanActiva
           console.log("pos: %d, line: [%s]", pos, line);
           continue;
         }
-        psState = {} as ParseState;
-        psState.category = line.substring(0, pos);
-        psState.achievement = line.substring(pos + 2);
-        //console.log('psState: %s', JSON.stringify(psState));
+        [category1ID, category2ID] = GameData.getCategoryPair(line.substring(0, pos), line.substring(pos + 2));
+        continue;
+      }
+      if (category1ID === undefined || category2ID === undefined) {
         continue;
       }
 
       // We have an achievement!
-      const achState = AchievementState.fromParseState(psState);
-      achState.state = convertToEQStateEnum(line.charAt(0));
+      const state = line.charAt(0);
 
+      // client component
       if (line.charCodeAt(2) == 9) {
         // [LCI]\t\t
-        var task = line.substring(3);
+        var component = line.substring(3);
         var count = 0;
         var total = 0;
 
         //console.log('2: [' + achievement + ']');
-        const match = reUnfinished.exec(task);
+        const match = reUnfinished.exec(component);
 
         if (match) {
           // console.log("match: " + match[2] + "/" + match[3]);
-          task = match[1];
+          component = match[1];
           count = parseInt(match[2]);
           total = parseInt(match[3]);
         }
         //console.log("task: " + task);
-        psState.task = task;
+        componentID = GameData.getComponentID(category1ID, category2ID, clientID, component);
 
-      } else if (line.charCodeAt(1) == 9) {
+      }
+      // client / achievement
+      else if (line.charCodeAt(1) == 9) {
         // [LCI]\t
         //console.log('1: [' + line.substring(2) + ']');
-        psState.client = line.substring(2);
-
-
+        clientID = GameData.getClientID(category1ID, category2ID, line.substring(2));
+        componentID = undefined;
       }
 
       //console.log("psState: %s, state: %s, character: %s", JSON.stringify(psState), JSON.stringify(state), character);
