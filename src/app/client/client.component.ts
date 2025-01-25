@@ -54,10 +54,10 @@ export class ClientComponent implements OnInit, OnChanges {
     this.data.length = 0;
 
     const d = GameData.getClientIDs(this.achievement$);
-    console.log('d:', d);
+    //console.log('d:', d);
 
     const e = GameData.getClients(d);
-    console.log('e:', e);
+    //console.log('e:', e);
 
     for(const row of e) {
       const el = {
