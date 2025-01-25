@@ -153,7 +153,7 @@ export class AchievementDataService extends AchievementData implements CanActiva
         psState = {} as ParseState;
         psState.category = line.substring(0, pos);
         psState.achievement = line.substring(pos + 2);
-        console.log('psState: %s', JSON.stringify(psState));
+        //console.log('psState: %s', JSON.stringify(psState));
         continue;
       }
 
@@ -181,12 +181,12 @@ export class AchievementDataService extends AchievementData implements CanActiva
 
       } else if (line.charCodeAt(1) == 9) {
         // [LCI]\t
-        console.log('1: [' + line.substring(2) + ']');
+        //console.log('1: [' + line.substring(2) + ']');
         psState.client = line.substring(2);
 
       }
 
-      console.log("psState: %s, state: %s, character: %s", JSON.stringify(psState), JSON.stringify(state), character);
+      //console.log("psState: %s, state: %s, character: %s", JSON.stringify(psState), JSON.stringify(state), character);
       //this.setData(psState, el, character);
 
     }
