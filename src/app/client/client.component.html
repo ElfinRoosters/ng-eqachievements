@@ -1,10 +1,40 @@
 <div class="container-fluid">
-    <p>client works!</p>
     <div class="col-2">
         Category ID: {{ category$ }}
     </div>
     <div class="col-2">
         Achievement ID: {{ achievement$ }}
     </div>
+    <div class="col-2">
+        Achievement ID: {{ hasFilesLoaded() }}
+    </div>
 
+    <table class="table table-striped table-hover table-fixed w-100 table-primary">
+        <thead>
+            <tr>
+                <th class="">Achievement</th>
+                <th class="">Missing</th>
+                @for (c of characters; track c.name) {
+                <th class="rotate position-relative">
+                    <div class="position-absolute bottom-0 start-0">
+                        <span class="px-10 py-0">{{ c.name }}</span>
+                    </div>
+                </th>
+                }
+                <th class="">Completed</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider tbody-bordered">
+        @for (row of data; track $index) {
+        <tr>
+            <td>{{ row.name }}</td>
+            <td>{{ row.missing }}</td>
+            @for (v of row.data; track $index) {
+                <td>{{ v }}</td>
+            }
+            <td>{{ row.completed }}</td>
+        </tr>
+        }
+        </tbody>
+    </table>
 </div>

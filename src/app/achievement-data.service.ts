@@ -19,35 +19,14 @@ export class AchievementFile {
   ){}
 }
 
-interface EQBaseType {
-  id: number;
-  name: string;
-}
-
-interface EQAchievementComponent {
-  name: string;
-};
-
-interface EQAchievement extends EQBaseType {
-  text?: string;
-  points?: number;
-  count: number;
-  components: EQAchievementComponent[];
-};
-
-interface EQAchievementData extends EQAchievement {
-  state: EQState;
-  total: number;
-}
-
 @Injectable({
   providedIn: 'root'
 })
 export class AchievementDataService extends AchievementData implements CanActivate {
   private readonly router = inject(Router);
-  isDataLoaded = signal(true);
+  isDataLoaded = signal(false);
   private readonly fileNameRe = /^(.*?)_(.*?)-Achievements.txt$/;
-  private characters = new Set<EQCharacter>();
+  characters = new Set<EQCharacter>();
 
   data:any = {};
 
@@ -99,9 +78,8 @@ export class AchievementDataService extends AchievementData implements CanActiva
     }).finally(() => {
       console.log('loadFiles:characters:', this.characters);
       this.isDataLoaded.set(this.characters.size > 0);
+      this.router.navigate(['/category/10/achievement/11'], { skipLocationChange: true });
     });
-
-    this.router.navigate(['/category/10/achievement/11'], { skipLocationChange: true });
     return true;
   }
 
@@ -158,8 +136,8 @@ export class AchievementDataService extends AchievementData implements CanActiva
       }
 
       // We have an achievement!
-      const state = AchievementState.fromParseState(psState);
-      state.state = convertToEQStateEnum(line.charAt(0));
+      const achState = AchievementState.fromParseState(psState);
+      achState.state = convertToEQStateEnum(line.charAt(0));
 
       if (line.charCodeAt(2) == 9) {
         // [LCI]\t\t
@@ -183,6 +161,7 @@ export class AchievementDataService extends AchievementData implements CanActiva
         // [LCI]\t
         //console.log('1: [' + line.substring(2) + ']');
         psState.client = line.substring(2);
+
 
       }
 
@@ -228,4 +207,12 @@ export class AchievementDataService extends AchievementData implements CanActiva
     return name;
   }
 
+  achievementStatus(catID: number, achID: number, clientID: number): any[] {
+    const data: any[] = [];
+    for (const c of this.characters) {
+      data.push('I');
+
+    }
+    return data;
+  }
 }

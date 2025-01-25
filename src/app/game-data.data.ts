@@ -1,4 +1,6 @@
 import { default as AchievementCategories } from '../gamedata/AchievementCategories.json'
+import { default as AchievementCategoryAssociationsClient } from '../gamedata/AchievementCategoryAssociationsClient.json'
+import { default as AchievementsClient } from '../gamedata/AchievementsClient.json'
 
 export class GameData {
     static makeMenuData() {
@@ -45,7 +47,7 @@ export class GameData {
         const el =  AchievementCategories.data.find((row) => row[3] === category);
         if (el === undefined) { return undefined }
 
-        const ael = AchievementCategories.data.find((row) => row[3] === name && row[0] === el[0]);
+        const ael = AchievementCategories.data.find((row) => row[3] === name && row[0] == el[0]);
         if (ael === undefined) { return undefined }
 
         if (typeof ael[2] === 'string') {
@@ -54,4 +56,22 @@ export class GameData {
         return ael[2];
     }
 
+    static getClientIDs(aid:number) {
+        const data: number[] = [];
+        console.log("getClientIDs(): aid:", aid);
+        AchievementCategoryAssociationsClient.data.filter((row) => row[0] == aid).forEach((v) => {
+            data.push(v[2]);
+        });
+        return data;
+    }
+
+    static getClients(ids:number[]) {
+        const data = [];
+        return AchievementsClient.data.filter((row) => {
+            if (typeof row[0] === 'string') {
+                return ids.includes(parseInt(row[0]));
+            }
+            return ids.includes(row[0])
+        });
+    }
 }
