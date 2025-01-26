@@ -7,17 +7,19 @@ import { ParseState } from './parse-state.data';
 import { GameData } from './game-data.data';
 
 export class EQCharacter {
+  data = new Map<string, any>();
   constructor(
-    public name:string,
-    public server:string,
-  ){}
+    public name: string,
+    public server: string,
+  ) { }
+
 }
 
 export class AchievementFile {
   constructor(
-      public eqCharacter:EQCharacter,
-      public text:string,
-  ){}
+    public eqCharacter: EQCharacter,
+    public text: string,
+  ) { }
 }
 
 @Injectable({
@@ -29,13 +31,11 @@ export class AchievementDataService extends AchievementData implements CanActiva
   private readonly fileNameRe = /^(.*?)_(.*?)-Achievements.txt$/;
   characters = new Set<EQCharacter>();
 
-  data:any = {};
-
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): MaybeAsync<GuardResult> {
     if (this.isDataLoaded()) {
       return true;
     } else {
-      this.router.navigate([''], {skipLocationChange: true});
+      this.router.navigate([''], { skipLocationChange: true });
       return false;
     }
   }
@@ -66,11 +66,10 @@ export class AchievementDataService extends AchievementData implements CanActiva
     const alldone = Promise.allSettled(promises).then((results) => {
       console.log('Clearing character list');
       this.characters.clear();
-      this.data.length = 0;
 
       results.filter((result) => result.status === 'fulfilled').forEach(
         (result) => {
-          console.log('result:',result);
+          console.log('result:', result);
           const lines = result.value.text.split(/[\r\n]+/).map((line) => line.trim());
           this.parseAchievements(result.value.eqCharacter, lines);
           this.characters.add(result.value.eqCharacter);
@@ -116,43 +115,51 @@ export class AchievementDataService extends AchievementData implements CanActiva
     // Locked / Completed / Incomplete
     const reAchievement = /^[LCI]\s/;
     const reUnfinished = new RegExp("^(.*?)\\t(\\d+)/(\\d+)$");
-    var psState = {} as ParseState;
-    var category1ID: number | undefined;
-    var category2ID: number | undefined;
-    var clientID: number | undefined;
-    var componentID: number | undefined;
-    console.log('(starting) psState:',psState);
+    var category1ID: string = "";
+    var category2ID: string = "";
+    var clientID: string = "";
+    var componentID: string = "";
+    var map: Map<string,any> | undefined;
 
-    for (const line of lines) {
+    for (const [idx, line] of lines.entries()) {
+      //if ((idx % 1000) == 0) { console.log('idx: %d', idx); }
       if (line.length < 4) { continue; }
+
       const match = reAchievement.exec(line);
       if (!match) {
         // We have the category: sub-category
         const pos = line.indexOf(': ');
-        if(pos < 0) {
+        if (pos < 0) {
           console.log("pos: %d, line: [%s]", pos, line);
           continue;
         }
         [category1ID, category2ID] = GameData.getCategoryPair(line.substring(0, pos), line.substring(pos + 2));
+        if (!character.data.has(category1ID)) {
+          character.data.set(category1ID, new Map<string, any>());
+        }
+        if (!character.data.get(category1ID).has(category2ID)) {
+          character.data.get(category1ID).set(category2ID, new Map<string, any>());
+        }
+        map = character.data.get(category1ID).get(category2ID);
         continue;
       }
-      if (category1ID === undefined || category2ID === undefined) {
+      if (category1ID.length < 1 || category2ID.length < 1 || typeof map !== 'object') {
+        console.log('[%d,%d]: idx=%d %s', category1ID, category2ID, idx, line);
         continue;
       }
 
       // We have an achievement!
       const state = line.charAt(0);
+      var count = 0;
+      var total = 0;
 
       // client component
       if (line.charCodeAt(2) == 9) {
         // [LCI]\t\t
         var component = line.substring(3);
-        var count = 0;
-        var total = 0;
 
         //console.log('2: [' + achievement + ']');
         const match = reUnfinished.exec(component);
-
         if (match) {
           // console.log("match: " + match[2] + "/" + match[3]);
           component = match[1];
@@ -161,54 +168,56 @@ export class AchievementDataService extends AchievementData implements CanActiva
         }
         //console.log("task: " + task);
         componentID = GameData.getComponentID(category1ID, category2ID, clientID, component);
-
       }
       // client / achievement
       else if (line.charCodeAt(1) == 9) {
         // [LCI]\t
         //console.log('1: [' + line.substring(2) + ']');
         clientID = GameData.getClientID(category1ID, category2ID, line.substring(2));
-        componentID = undefined;
+        componentID = clientID;
+        if (!map.has(clientID)) {
+          map.set(clientID, new Map<string, any>());
+        }
       }
-
-      //console.log("psState: %s, state: %s, character: %s", JSON.stringify(psState), JSON.stringify(state), character);
-      //this.setData(psState, el, character);
-
+      //console.log('[%d,%d,%d,%d]: state=%s, count=%d', category1ID,category2ID,clientID,componentID,state,count);
+      map.get(clientID).set(componentID, {'state': state, 'count': count});
     }
+
+    console.log('character:', character);
   }
 
-  private checkAchievementRename(state: ParseState, name: string):string {
+  private checkAchievementRename(state: ParseState, name: string): string {
     var k: any = this.nameReMap;
     if (this.nameReMap.has(state.category))
-/*    
-    for (let i = 0; i < argv.length - 2; i++) {
-      k = k.get(argv[i]);
-      if (typeof k === 'string') {
-        return k;
+      /*    
+          for (let i = 0; i < argv.length - 2; i++) {
+            k = k.get(argv[i]);
+            if (typeof k === 'string') {
+              return k;
+            }
+            if (!(k instanceof Map)) {
+              break;
+            }
+          }
+          */
+      if (name.startsWith('Complete the achievement "')) {
+        let l = 'Complete the achievement "'.length;
+        if (name.endsWith('".')) {
+          return name.substring(l, name.length - 2);
+        }
+        else if (name.endsWith('"')) {
+          return name.substring(l, name.length - 1);
+        }
       }
-      if (!(k instanceof Map)) {
-        break;
+      else if (name.startsWith('Complete "')) {
+        let l = 'Complete "'.length;
+        if (name.endsWith('".')) {
+          return name.substring(l, name.length - 2);
+        }
+        else if (name.endsWith('"')) {
+          return name.substring(l, name.length - 1);
+        }
       }
-    }
-    */
-    if (name.startsWith('Complete the achievement "')) {
-      let l = 'Complete the achievement "'.length;
-      if (name.endsWith('".')) {
-        return name.substring(l, name.length - 2);
-      }
-      else if (name.endsWith('"')) {
-        return name.substring(l, name.length - 1);
-      }
-    }
-    else if (name.startsWith('Complete "')) {
-      let l = 'Complete "'.length;
-      if (name.endsWith('".')) {
-        return name.substring(l, name.length - 2);
-      }
-      else if (name.endsWith('"')) {
-        return name.substring(l, name.length - 1);
-      }
-    }
 
     return name;
   }
