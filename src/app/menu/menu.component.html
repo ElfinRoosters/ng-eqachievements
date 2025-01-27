@@ -1,29 +1,34 @@
-<aside>
-    <div>
-        <div ngbAccordion #accordion="ngbAccordion">
+<aside class="h-100">
+    <div class="h-90">
+        <div ngbAccordion #accordion="ngbAccordion" class="custom-aside overflow-y-auto">
             @for (item of menu; track item) {
             <div ngbAccordionItem="menu{{ item.id }}">
                 <h2 ngbAccordionHeader class="">
-                    <button ngbAccordionButton placement="top" ngbTooltip="{{ item.tooltip }}" [openDelay]="1000" triggers="hover">{{ item.name }}</button>
+                    <button ngbAccordionButton placement="top" ngbTooltip="{{ item.tooltip }}" [openDelay]="1000"
+                        triggers="hover">{{ item.name }}</button>
                 </h2>
                 <div ngbAccordionCollapse class="">
                     <div ngbAccordionBody class="">
                         <ng-template>
-                        <ul class="list-unstyled">
-                        @for (cat of item.children ; track cat) {
-                        <li class="list-group-item">
-                            <button type="button" class="list-group-item list-group-item-action btn btn-custom text-secondary"
-                             [routerLink]="['/category',item.id,'achievement',cat.id]" [skipLocationChange]="true" routerLinkActive="active">{{ cat.name }}</button>
-                        </li>
-                        }
-                        </ul>
+                            <ul class="list-unstyled">
+                                @for (cat of item.children ; track cat) {
+                                <li class="list-group-item">
+                                    <button type="button"
+                                        class="list-group-item list-group-item-action btn btn-custom text-secondary"
+                                        [routerLink]="['/category',item.id,'achievement',cat.id]"
+                                        [skipLocationChange]="true" routerLinkActive="active">{{ cat.name }}</button>
+                                </li>
+                                }
+                            </ul>
                         </ng-template>
                     </div>
                 </div>
             </div>
             }
         </div>
-        <button class="btn btn-sm btn-outline-primary me-2" (click)="accordion.expandAll()">Expand all</button>
-        <button class="btn btn-sm btn-outline-primary me-2" (click)="accordion.collapseAll()">Collapse all</button>
+        <div class="w-100">
+            <button class="btn btn-sm btn-outline-primary me-2" (click)="accordion.expandAll()">Expand all</button>
+            <button class="btn btn-sm btn-outline-primary me-2" (click)="accordion.collapseAll()">Collapse all</button>
+        </div>
     </div>
 </aside>
