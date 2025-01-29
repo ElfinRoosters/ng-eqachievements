@@ -1,34 +1,31 @@
-<div class="container-fluid pe-10 h-90 hmax-90">
-    <div class="row">
-    <div class="col-2">
-        Category ID: {{ category$ }}
+<div class="h-100 container-fluid col">
+    <div class="row client-title">
+        <div class="col-6">
+            Category ID: {{ category$ }}
+        </div>
+        <div class="col-6">
+            Achievement ID: {{ achievement$ }}
+        </div>
     </div>
-    <div class="col-2">
-        Achievement ID: {{ achievement$ }}
-    </div>
-    <div class="col-2">
-        hasFilesLoaded(): {{ hasFilesLoaded() }}
-    </div>
-    </div>
-    <div class="h-90">
-        <table class="table table-striped table-hover table-fixed table-primary overflow-y-auto">
+    <div class="row h-100 overflow-y-auto">
+        <table class="table table-striped table-hover table-fixed table-dark">
             <thead>
                 <tr>
-                    <th class="">Achievement</th>
-                    <th class="">Missing</th>
+                    <th class="col-5">Achievement</th>
+                    <th class="col-1">Missing</th>
                     @for (c of characters; track c.name) {
                     <th class="rotate position-relative border-start border-end">
                         <div class="position-absolute bottom-0 start-0">
-                            <span class="px-10 py-0">{{ c.name }}</span>
+                            <span class="">{{ c.name }}</span>
                         </div>
                     </th>
                     }
-                    <th class="">Completed</th>
+                    <th class="col-1">Completed</th>
                 </tr>
             </thead>
             <tbody class="table-group-divider tbody-bordered">
                 @for (row of data; track $index) {
-                <tr>
+                <tr class="tr-custom">
                     <td>{{ row.name }} ({{ row.points }} Points)</td>
                     <td>{{ row.missing }}</td>
                     @for (v of row.data; track $index) {
