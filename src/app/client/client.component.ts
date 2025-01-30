@@ -108,7 +108,7 @@ export class ClientComponent implements OnInit, OnChanges {
       if (el.missing > 0) {
         this.logger.log('ac:', ac);
         const components = this.gameData.getComponents(ac.id);
-        this.logger.log('components:', components);
+        //this.logger.log('components:', components);
   
       }
       this.data.push(el);

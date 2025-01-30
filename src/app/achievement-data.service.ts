@@ -123,7 +123,7 @@ export class AchievementDataService extends AchievementData implements CanActiva
     var map: Map<string,any> | undefined;
 
     for (const [idx, line] of lines.entries()) {
-      // if ((idx % 1000) == 0) { console.log('idx: %d', idx); }
+      // if ((idx % 1000) == 0) { this.logger.log('idx: %d', idx); }
       if (line.length < 4) { continue; }
 
       const match = reAchievement.exec(line);
@@ -131,7 +131,7 @@ export class AchievementDataService extends AchievementData implements CanActiva
         // We have the category: sub-category
         const pos = line.indexOf(': ');
         if (pos < 0) {
-          console.log("pos: %d, line: [%s]", pos, line);
+          this.logger.log("pos: %d, line: [%s]", pos, line);
           continue;
         }
         [category1ID, category2ID] = this.gamedata.getCategoryPair(line.substring(0, pos), line.substring(pos + 2));

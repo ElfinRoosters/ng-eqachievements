@@ -227,7 +227,6 @@ export class GameDataService {
       });
     }
 
-    this.logger.log('menudata:', data);
     return data;
   }
 
