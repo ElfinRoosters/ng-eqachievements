@@ -120,19 +120,6 @@ export class GameDataService {
     throw new Error("Invalid category: " + category);
   }
 
-  getAchievementID(category1: string, category2: string): string {
-    const categoryID = this.getCategoryID(category1);
-
-    for (const [id, acat] of this.categories.entries()) {
-      if (acat.parentID === undefined) { continue }
-      if (acat.name === category2 && String(acat.parentID) === categoryID) {
-        return String(id);
-      }
-    }
-
-    throw new Error("Invalid category/subcategory: " + category1 + "/" + category2);
-  }
-
   getCategoryPair(category1: string, category2: string): string[] {
     const categoryID = this.getCategoryID(category1);
 
