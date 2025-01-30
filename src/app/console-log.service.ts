@@ -4,10 +4,12 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ConsoleLogService {
-  log(...argv:any[]) {
+  log(...data:any[]) {
+    const a0 = '[' + new Date().toISOString().slice(11, -1) + '] ' + data[0];
+
     return console.log.apply(
       console,
-      ['[' + new Date().toISOString().slice(11, -1) + ']'].concat(Array.prototype.slice.call(argv))
+      [a0].concat(Array.prototype.slice.call(data, 1))
     );
   };
 }
