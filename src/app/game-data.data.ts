@@ -110,7 +110,7 @@ I               Earn the right to request ornamentations of your epic 1.5 and 2.
         if (row === undefined) {
             console.log('getClientID(%d, %d, "%s") has no entry', category1ID, category2ID, name);
         }
-        else {            
+        else {
             clientID = String(row[0]);
         }
 
@@ -150,6 +150,8 @@ AchievementComponentsClient.txt:
 
     static getComponentID(category1ID: string, category2ID: string, clientID: string, component: string): string {
         let componentID = "";
+        //console.group();
+        //console.time('getComponentID');
 
         const row = AchievementComponentsClient.data.find((row) => clientID == row[0] && component === row[4]);
         if (row === undefined) {
@@ -159,7 +161,9 @@ AchievementComponentsClient.txt:
             componentID = String(row[3]);
             //console.log('getComponentID(%d, %d, %d, "%s") returns: %d', category1ID, category2ID, clientID, component, componentID);
         };
+        //console.timeEnd('getComponentID');
 
+        //console.groupEnd();
         return componentID;
     }
 }

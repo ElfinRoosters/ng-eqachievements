@@ -1,10 +1,8 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, GuardResult, MaybeAsync, Router, RouterStateSnapshot } from '@angular/router';
 import { AchievementData } from './achievement-data';
-import { convertToEQStateEnum, EQState } from './eqstate.status';
-import { AchievementState } from './achievement-state.data';
-import { ParseState } from './parse-state.data';
-import { GameData } from './game-data.data';
+import { GameDataService } from './game-data.service';
+import { ConsoleLogService } from './console-log.service';
 
 export class EQCharacter {
   data = new Map<string, any>();
@@ -27,6 +25,9 @@ export class AchievementFile {
 })
 export class AchievementDataService extends AchievementData implements CanActivate {
   private readonly router = inject(Router);
+  private readonly gamedata = inject(GameDataService);
+  private readonly logger = inject(ConsoleLogService);
+
   isDataLoaded = signal(false);
   private readonly fileNameRe = /^(.*?)_(.*?)-Achievements.txt$/;
   characters = new Set<EQCharacter>();
@@ -46,7 +47,7 @@ export class AchievementDataService extends AchievementData implements CanActiva
     if (this.files.length == 0) {
       return false;
     }
-    console.log('loadFiles(): this.files.length > 0');
+    this.logger.log('loadFiles(): this.files.length > 0');
 
     const promises: Promise<AchievementFile>[] = this.files.filter(file => this.fileNameRe.test(file.name))
       .map(file => new Promise((resolve, reject) => {
@@ -62,21 +63,21 @@ export class AchievementDataService extends AchievementData implements CanActiva
         reader.readAsText(file);
       }));
 
-    console.log("watching for promises to resolve");
+    this.logger.log("watching for promises to resolve");
     const alldone = Promise.allSettled(promises).then((results) => {
-      console.log('Clearing character list');
+      this.logger.log('Clearing character list');
       this.characters.clear();
 
       results.filter((result) => result.status === 'fulfilled').forEach(
         (result) => {
-          console.log('result:', result);
+          this.logger.log('result:', result);
           const lines = result.value.text.split(/[\r\n]+/).map((line) => line.trim());
           this.parseAchievements(result.value.eqCharacter, lines);
           this.characters.add(result.value.eqCharacter);
         }
       );
     }).finally(() => {
-      console.log('loadFiles:characters:', this.characters);
+      this.logger.log('loadFiles:characters:', this.characters);
       this.isDataLoaded.set(this.characters.size > 0);
       this.router.navigate(['/category/10/achievement/11'], { skipLocationChange: true });
     });
@@ -86,32 +87,32 @@ export class AchievementDataService extends AchievementData implements CanActiva
   onFileSelected($event: Event) {
     const element: HTMLInputElement = $event.target as HTMLInputElement;
     if (element.files === null) {
-      console.log("element has no input type='file'?");
+      this.logger.log("element has no input type='file'?");
       this.files.length = 0;
       return false;
     }
     if (element.files.length == 0) {
-      console.log("no files selected.");
+      this.logger.log("no files selected.");
       this.files.length = 0;
       return false;
     }
 
     let fileList: FileList = element.files;
-    //console.log('fileList: %s', JSON.stringify(fileList));
+    //this.logger.log('fileList: %s', JSON.stringify(fileList));
     const fileArray = Array.from(fileList);
 
     const filteredFiles = fileArray.sort((a, b) => a.name.localeCompare(b.name)).filter(file => this.fileNameRe.test(file.name));
-    console.log(filteredFiles);
+    this.logger.log(filteredFiles);
     this.files.length = 0;
     this.files.push(...filteredFiles);
-    console.log("onFileSelected files.length: %d", this.files.length);
+    this.logger.log("onFileSelected files.length: %d", this.files.length);
 
     return true;
   }
 
   parseAchievements(character: EQCharacter, lines: string[]) {
-    console.log('parseAchievements: character: ', character);
-
+    this.logger.log('parseAchievements: character: ', character);
+    
     // Locked / Completed / Incomplete
     const reAchievement = /^[LCI]\s/;
     const reUnfinished = new RegExp("^(.*?)\\t(\\d+)/(\\d+)$");
@@ -122,7 +123,7 @@ export class AchievementDataService extends AchievementData implements CanActiva
     var map: Map<string,any> | undefined;
 
     for (const [idx, line] of lines.entries()) {
-      //if ((idx % 1000) == 0) { console.log('idx: %d', idx); }
+      // if ((idx % 1000) == 0) { console.log('idx: %d', idx); }
       if (line.length < 4) { continue; }
 
       const match = reAchievement.exec(line);
@@ -133,7 +134,7 @@ export class AchievementDataService extends AchievementData implements CanActiva
           console.log("pos: %d, line: [%s]", pos, line);
           continue;
         }
-        [category1ID, category2ID] = GameData.getCategoryPair(line.substring(0, pos), line.substring(pos + 2));
+        [category1ID, category2ID] = this.gamedata.getCategoryPair(line.substring(0, pos), line.substring(pos + 2));
         if (!character.data.has(category1ID)) {
           character.data.set(category1ID, new Map<string, any>());
         }
@@ -144,7 +145,7 @@ export class AchievementDataService extends AchievementData implements CanActiva
         continue;
       }
       if (category1ID.length < 1 || category2ID.length < 1 || typeof map !== 'object') {
-        console.log('[%d,%d]: idx=%d %s', category1ID, category2ID, idx, line);
+        this.logger.log('[%d,%d]: idx=%d %s', category1ID, category2ID, idx, line);
         continue;
       }
 
@@ -158,76 +159,31 @@ export class AchievementDataService extends AchievementData implements CanActiva
         // [LCI]\t\t
         var component = line.substring(3);
 
-        //console.log('2: [' + achievement + ']');
+        //this.logger.log('2: [' + achievement + ']');
         const match = reUnfinished.exec(component);
         if (match) {
-          // console.log("match: " + match[2] + "/" + match[3]);
+          // this.logger.log("match: " + match[2] + "/" + match[3]);
           component = match[1];
           count = parseInt(match[2]);
           total = parseInt(match[3]);
         }
-        //console.log("task: " + task);
-        componentID = GameData.getComponentID(category1ID, category2ID, clientID, component);
+        //this.logger.log("task: " + task);
+        componentID = this.gamedata.getComponentID(category1ID, category2ID, clientID, component);
       }
       // client / achievement
       else if (line.charCodeAt(1) == 9) {
         // [LCI]\t
-        //console.log('1: [' + line.substring(2) + ']');
-        clientID = GameData.getClientID(category1ID, category2ID, line.substring(2));
+        //this.logger.log('1: [' + line.substring(2) + ']');
+        clientID = this.gamedata.getClientID(category1ID, category2ID, line.substring(2));
         componentID = clientID;
         if (!map.has(clientID)) {
           map.set(clientID, new Map<string, any>());
         }
       }
-      //console.log('[%d,%d,%d,%d]: state=%s, count=%d', category1ID,category2ID,clientID,componentID,state,count);
+      //this.logger.log('[%d,%d,%d,%d]: state=%s, count=%d', category1ID,category2ID,clientID,componentID,state,count);
       map.get(clientID).set(componentID, {'state': state, 'count': count});
     }
 
-    console.log('character:', character);
-  }
-
-  private checkAchievementRename(state: ParseState, name: string): string {
-    var k: any = this.nameReMap;
-    if (this.nameReMap.has(state.category))
-      /*    
-          for (let i = 0; i < argv.length - 2; i++) {
-            k = k.get(argv[i]);
-            if (typeof k === 'string') {
-              return k;
-            }
-            if (!(k instanceof Map)) {
-              break;
-            }
-          }
-          */
-      if (name.startsWith('Complete the achievement "')) {
-        let l = 'Complete the achievement "'.length;
-        if (name.endsWith('".')) {
-          return name.substring(l, name.length - 2);
-        }
-        else if (name.endsWith('"')) {
-          return name.substring(l, name.length - 1);
-        }
-      }
-      else if (name.startsWith('Complete "')) {
-        let l = 'Complete "'.length;
-        if (name.endsWith('".')) {
-          return name.substring(l, name.length - 2);
-        }
-        else if (name.endsWith('"')) {
-          return name.substring(l, name.length - 1);
-        }
-      }
-
-    return name;
-  }
-
-  achievementStatus(catID: number, achID: number, clientID: number): any[] {
-    const data: any[] = [];
-    for (const c of this.characters) {
-      data.push('I');
-
-    }
-    return data;
+    this.logger.log('character:', character);
   }
 }

@@ -2,7 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { AchievementDataService, EQCharacter } from '../achievement-data.service';
-import { GameData } from '../game-data.data';
+import { GameDataService } from '../game-data.service';
+import { ConsoleLogService } from '../console-log.service';
 
 @Component({
   selector: 'app-client',
@@ -14,6 +15,8 @@ export class ClientComponent implements OnInit, OnChanges {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly dataService = inject(AchievementDataService);
+  private readonly gameData = inject(GameDataService);
+  private readonly logger = inject(ConsoleLogService);
 
   hasFilesLoaded = computed(() => this.dataService.isDataLoaded());
 
@@ -25,18 +28,18 @@ export class ClientComponent implements OnInit, OnChanges {
 
   @Input()
   set category(id: string) {
-    //console.log('categoryId:', id);
+    //this.logger.log('categoryId:', id);
     this.category$ = id;
   };
 
   @Input()
   set achievement(id: string) {
-    //console.log('achievementId:', id);
+    //this.logger.log('achievementId:', id);
     this.achievement$ = id;
   };
 
   ngOnInit(): void {
-    console.log('ngOnInit()');
+    this.logger.log('ngOnInit()');
     this.characters.clear();
     this.dataService.characters.forEach((a) => {
       this.characters.add(a);
@@ -46,53 +49,41 @@ export class ClientComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('ngOnChanges(): changes:', changes);
+    this.logger.log('ngOnChanges(): changes:', changes);
     if (!this.hasFilesLoaded()) {
-      console.log('ngOnChanges(): !hasFilesLoaded');
+      this.logger.log('ngOnChanges(): !hasFilesLoaded');
       return;
     }
 
     if (this.characters.size == 0) {
-      console.log('ngOnChanges() called before this.characters initialized');
+      this.logger.log('ngOnChanges() called before this.characters initialized');
       return;
     }
 
     this.refreshTableData();
   }
   refreshTableData() {
-    console.log('refreshTableData()');
+    this.logger.log('refreshTableData()');
     this.data.length = 0;
 
-    console.log('category$: ', this.category$);
-    console.log('achievement$: ', this.achievement$);
-    console.log('characters:', this.characters);
+    this.logger.log('category$: ', this.category$);
+    this.logger.log('achievement$: ', this.achievement$);
+    this.logger.log('characters:', this.characters);
 
-    /*
-    for (const c of this.characters) {
-      console.log("c.name: %s", c.name);
-      //console.log("c.data: ", c.data);
-      if (!c.data.has(this.category$)) {
-        console.log("c.data.keys() %s does not contain %d", JSON.stringify(Object.keys(c.data)), this.category$);
-      }
-      if (!c.data.get(this.category$).has(this.achievement$)) {
-        console.log("c.data.category.keys() %s does not contain %d", JSON.stringify(Object.keys(c.data.get(this.category$))), this.achievement$);
-      }
-    }
-      */
+    const d = this.gameData.getClientIDsForAchievement(this.achievement$);
+    //this.logger.log('d:', d);
 
-    const d = GameData.getClientIDsForAchievement(this.achievement$);
-    //console.log('d:', d);
+    const e = this.gameData.getClients(d);
+    //this.logger.log('e:', e);
 
-    const e = GameData.getClients(d);
-    //console.log('e:', e);
+    for (const [ridx, ac] of e.entries()) {
 
-    for (const [ridx, row] of e.entries()) {
       const rdata = new Array(this.characters.size).fill("I");
       const el = {
-        'id': row[0] as number,
-        'name': row[1],
-        'text': row[2],
-        'points': row[4] as number,
+        'id': ac.id,
+        'name': ac.name,
+        'text': ac.text,
+        'points': ac.points,
         'missing': 0,
         'completed': 0,
         'data': rdata
@@ -103,18 +94,25 @@ export class ClientComponent implements OnInit, OnChanges {
         const state = c.data.get(this.category$)?.get(this.achievement$)?.get(String(el.id))?.get(String(el.id));
         if (state === undefined) { return; }
         rdata[idx] = state.state;
-        //console.log('rdata[%d] = "%s"', idx, JSON.stringify(state.state));
+        //this.logger.log('rdata[%d] = "%s"', idx, JSON.stringify(state.state));
         if (state.state === 'C') {
           el.completed++;
         }
         else {
-          console.log('state:', state);
+          this.logger.log('state:', state);
           el.missing++;
         }
         idx++;
       });
+
+      if (el.missing > 0) {
+        this.logger.log('ac:', ac);
+        const components = this.gameData.getComponents(ac.id);
+        this.logger.log('components:', components);
+  
+      }
       this.data.push(el);
-      //console.log('el.data: %s', JSON.stringify(el.data));
+      //this.logger.log('el.data: %s', JSON.stringify(el.data));
     }
 
   }
