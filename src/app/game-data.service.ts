@@ -205,31 +205,29 @@ export class GameDataService {
     const data = [];
 
     // Add the top level categories.
-    for (const [id, acat] of this.categories.entries()) {
-      if (acat.parentID === undefined) { continue }
+    for (const [id, category] of this.categories.entries()) {
+      if (category.parentID !== undefined) { continue }
       data.push({
-        'id': acat.id,
-        'name': acat.name,
-        'tooltip': acat.text,
-        'order': acat.order,
+        'id': category.id,
+        'name': category.name,
+        'tooltip': category.text,
+        'order': category.order,
         'children': [] as any
       });
     }
 
     // Add the sub-level categories.
-    for (const [id, acat] of this.categories.entries()) {
-      if (acat.parentID !== undefined) { continue }
-      const parent = data.find((item) => item.id == acat.id);
-      if (parent === undefined) { continue }
-
-      parent.children.push({
-        'id': acat.id,
-        'name': acat.name,
-        'tooltip': acat.text,
-        'order': acat.order,
+    for (const [id, category] of this.categories.entries()) {
+      if (category.parentID === undefined) { continue }
+      data.find((item) => item.id == category.parentID)?.children.push({
+        'id': category.id,
+        'name': category.name,
+        'tooltip': category.text,
+        'order': category.order,
       });
     }
 
+    this.logger.log('menudata:', data);
     return data;
   }
 
