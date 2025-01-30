@@ -1,18 +1,20 @@
-<div class="container-fluid col" scope="col">
-    <div class="row client-title">
-        <div class="col-6">
-            Category ID: {{ category$ }}
-        </div>
-        <div class="col-6">
-            Achievement ID: {{ achievement$ }}
-        </div>
-    </div>
-    <div class="row h-100 overflow-y-auto">
-        <table class="table table-striped table-hover table-fixed table-dark client-table">
+<div class="container-fluid h-100" scope="col">
+    <div class="row mh-100 overflow-y-auto">
+        <table class="table table-striped table-hover table-fixed table-dark client-table caption-top">
+            <caption>
+                <div class="row">
+                <div class="col-6">
+                    Category ID: {{ category$ }}
+                </div>
+                <div class="col-6">
+                    Achievement ID: {{ achievement$ }}
+                </div>
+                </div>
+            </caption>
             <thead class="table-header" scope="col">
                 <tr>
                     <th class="col-5">Achievement</th>
-                    <th class="col-1">Missing</th>
+                    <th class="col-1 text-center">Missing</th>
                     @for (c of characters; track c.name) {
                     <th class="rotate position-relative border-start border-end">
                         <div class="position-absolute bottom-0 start-0">
@@ -20,18 +22,18 @@
                         </div>
                     </th>
                     }
-                    <th class="col-1">Completed</th>
+                    <th class="col-1 text-center">Completed</th>
                 </tr>
             </thead>
             <tbody class="table-group-divider tbody-bordered">
                 @for (row of data; track $index) {
                 <tr class="tr-custom">
                     <td>{{ row.name }} ({{ row.points }} Points)</td>
-                    <td>{{ row.missing }}</td>
+                    <td class="text-center">{{ row.missing | number }}</td>
                     @for (v of row.data; track $index) {
-                    <td>{{ v }}</td>
+                    <td class="text-center">{{ v }}</td>
                     }
-                    <td>{{ row.completed }}</td>
+                    <td class="text-center">{{ row.completed | number }}</td>
                 </tr>
                 }
             </tbody>
