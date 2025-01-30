@@ -176,10 +176,10 @@ export class AchievementDataService extends AchievementData implements CanActiva
         // [LCI]\t
         //this.logger.log('1: [' + line.substring(2) + ']');
         clientID = this.gamedata.getClientID(category1ID, category2ID, line.substring(2));
-        componentID = clientID;
         if (!map.has(clientID)) {
           map.set(clientID, new Map<string, any>());
         }
+        componentID = clientID;
       }
       //this.logger.log('[%d,%d,%d,%d]: state=%s, count=%d, total=%d', category1ID,category2ID,clientID,componentID,state,count,total);
       map.get(clientID).set(componentID, { 'state': state, 'count': count, 'total': total });
