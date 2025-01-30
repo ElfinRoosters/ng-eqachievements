@@ -91,7 +91,7 @@ export class GameDataService {
       ));
     });
 
-    const aacd = new Map<number,number>();
+    const aacd = new Map<number, number>();
     for (const [ac, required] of AchievementAssociationsClientData.data.values()) {
       aacd.set(ac, required);
     }
@@ -199,6 +199,38 @@ export class GameDataService {
 
   getComponents(component: number) {
     return this.AchievementComponents.get(component);
+  }
+
+  makeMenuData() {
+    const data = [];
+
+    // Add the top level categories.
+    for (const [id, acat] of this.categories.entries()) {
+      if (acat.parentID === undefined) { continue }
+      data.push({
+        'id': acat.id,
+        'name': acat.name,
+        'tooltip': acat.text,
+        'order': acat.order,
+        'children': [] as any
+      });
+    }
+
+    // Add the sub-level categories.
+    for (const [id, acat] of this.categories.entries()) {
+      if (acat.parentID !== undefined) { continue }
+      const parent = data.find((item) => item.id == acat.id);
+      if (parent === undefined) { continue }
+
+      parent.children.push({
+        'id': acat.id,
+        'name': acat.name,
+        'tooltip': acat.text,
+        'order': acat.order,
+      });
+    }
+
+    return data;
   }
 
 }

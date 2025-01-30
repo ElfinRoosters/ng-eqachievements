@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgbAccordionModule, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { GameData } from '../game-data.data';
+import { GameDataService } from '../game-data.service';
 
 export interface MenuItem {
   name: string;
@@ -20,11 +20,12 @@ export interface MenuItem {
 export class MenuComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly gameData = inject(GameDataService);
 
   menu!: MenuItem[];
 
   constructor() {
-    this.menu = GameData.makeMenuData() as MenuItem[];
+    this.menu = this.gameData.makeMenuData() as MenuItem[];
 
   }
 
