@@ -112,7 +112,7 @@ export class AchievementDataService extends AchievementData implements CanActiva
 
   parseAchievements(character: EQCharacter, lines: string[]) {
     this.logger.log('parseAchievements: character: ', character);
-    
+
     // Locked / Completed / Incomplete
     const reAchievement = /^[LCI]\s/;
     const reUnfinished = new RegExp("^(.*?)\\t(\\d+)/(\\d+)$");
@@ -120,7 +120,7 @@ export class AchievementDataService extends AchievementData implements CanActiva
     var category2ID: string = "";
     var clientID: string = "";
     var componentID: string = "";
-    var map: Map<string,any> | undefined;
+    var map: Map<string, any> | undefined;
 
     for (const [idx, line] of lines.entries()) {
       // if ((idx % 1000) == 0) { this.logger.log('idx: %d', idx); }
@@ -166,6 +166,7 @@ export class AchievementDataService extends AchievementData implements CanActiva
           component = match[1];
           count = parseInt(match[2]);
           total = parseInt(match[3]);
+          //this.logger.log("component: %s: %d/%d", component, count, total);
         }
         //this.logger.log("task: " + task);
         componentID = this.gamedata.getComponentID(category1ID, category2ID, clientID, component);
@@ -180,8 +181,8 @@ export class AchievementDataService extends AchievementData implements CanActiva
           map.set(clientID, new Map<string, any>());
         }
       }
-      //this.logger.log('[%d,%d,%d,%d]: state=%s, count=%d', category1ID,category2ID,clientID,componentID,state,count);
-      map.get(clientID).set(componentID, {'state': state, 'count': count});
+      //this.logger.log('[%d,%d,%d,%d]: state=%s, count=%d, total=%d', category1ID,category2ID,clientID,componentID,state,count,total);
+      map.get(clientID).set(componentID, { 'state': state, 'count': count, 'total': total });
     }
 
     this.logger.log('character:', character);
