@@ -1,6 +1,6 @@
-<div class="container-fluid h-100" scope="col">
-    <div class="row mh-100 overflow-y-auto">
-        <table class="table table-striped table-hover table-fixed table-dark client-table caption-top">
+<div class="custom-max">
+    <div class="h-100 overflow-y-auto overflow-x-hidden">
+        <table class="table table-striped table-hover table-fixed table-dark caption-top">
             <caption>
                 <div class="row">
                 <div class="col-6">
@@ -27,11 +27,11 @@
             </thead>
             <tbody class="table-group-divider tbody-bordered">
                 @for (row of data; track $index) {
-                <tr class="tr-custom">
+                <tr class="">
                     <td>{{ row.name }} ({{ row.points }} Points)</td>
                     <td class="text-center">{{ row.missing | number }}</td>
                     @for (v of row.data; track $index) {
-                    <td class="text-center">{{ v }}</td>
+                    <td class="text-center border-start border-end">{{ v }}</td>
                     }
                     <td class="text-center">{{ row.completed | number }}</td>
                 </tr>
