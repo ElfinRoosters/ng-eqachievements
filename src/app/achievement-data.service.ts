@@ -70,7 +70,7 @@ export class AchievementDataService implements CanActivate {
     if (this.files.length == 0) {
       return false;
     }
-    this.logger.log('loadFiles(): this.files.length > 0');
+    //this.logger.log('loadFiles(): this.files.length > 0');
 
     const promises: Promise<AchievementFile>[] = this.files.filter(file => this.fileNameRe.test(file.name))
       .map(file => new Promise((resolve, reject) => {
@@ -86,9 +86,9 @@ export class AchievementDataService implements CanActivate {
         reader.readAsText(file);
       }));
 
-    this.logger.log("watching for promises to resolve");
+    //this.logger.log("watching for promises to resolve");
     const alldone = Promise.allSettled(promises).then((results) => {
-      this.logger.log('Clearing character list');
+      //this.logger.log('Clearing character list');
       this.characters.clear();
 
       results.filter((result) => result.status === 'fulfilled').forEach(
@@ -100,7 +100,7 @@ export class AchievementDataService implements CanActivate {
         }
       );
     }).finally(() => {
-      this.logger.log('loadFiles:characters:', this.characters);
+      //this.logger.log('loadFiles:characters:', this.characters);
       this.isDataLoaded.set(this.characters.size > 0);
       this.router.navigate(['/category/10/achievement/11'], { skipLocationChange: true });
     });
@@ -115,7 +115,7 @@ export class AchievementDataService implements CanActivate {
       return false;
     }
     if (element.files.length == 0) {
-      this.logger.log("no files selected.");
+      //this.logger.log("no files selected.");
       this.files.length = 0;
       return false;
     }
@@ -125,10 +125,10 @@ export class AchievementDataService implements CanActivate {
     const fileArray = Array.from(fileList);
 
     const filteredFiles = fileArray.sort((a, b) => a.name.localeCompare(b.name)).filter(file => this.fileNameRe.test(file.name));
-    this.logger.log(filteredFiles);
+    //this.logger.log(filteredFiles);
     this.files.length = 0;
     this.files.push(...filteredFiles);
-    this.logger.log("onFileSelected files.length: %d", this.files.length);
+    //this.logger.log("onFileSelected files.length: %d", this.files.length);
 
     return true;
   }

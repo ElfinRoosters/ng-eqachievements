@@ -40,17 +40,12 @@ export class ClientComponent implements OnInit, OnChanges {
     this.achievement$ = id;
   };
 
-  @Input()
-  set task(id: string) {
-    this.logger.log('taskId:', id);
-  };
-
   getCategoryName(categoryID: string) {
     return this.gameData.getCategory(parseInt(categoryID));
   }
 
   ngOnInit(): void {
-    this.logger.log('ngOnInit()');
+    //this.logger.log('ngOnInit()');
     this.characters.clear();
     this.dataService.characters.forEach((a) => {
       this.characters.add(a);
@@ -60,21 +55,21 @@ export class ClientComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.logger.log('ngOnChanges(): changes:', changes);
+    //this.logger.log('ngOnChanges(): changes:', changes);
     if (!this.hasFilesLoaded()) {
-      this.logger.log('ngOnChanges(): !hasFilesLoaded');
+      //this.logger.log('ngOnChanges(): !hasFilesLoaded');
       return;
     }
 
     if (this.characters.size == 0) {
-      this.logger.log('ngOnChanges() called before this.characters initialized');
+      //this.logger.log('ngOnChanges() called before this.characters initialized');
       return;
     }
 
     this.refreshTableData();
   }
   refreshTableData() {
-    this.logger.log('refreshTableData()');
+    //this.logger.log('refreshTableData()');
     this.data.length = 0;
 
     //this.logger.log('category$: ', this.category$);
