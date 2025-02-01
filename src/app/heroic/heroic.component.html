@@ -1,0 +1,49 @@
+<div class="custom-max">
+    <div class="h-100 overflow-y-scroll overflow-x-hidden">
+        <table class="table table-fixed table-dark">
+            <thead class="table-header" scope="col">
+                <tr>
+                    <th class="col-5" rowspan="2">Achievement</th>
+                    @for (c of characters; track c.name) {
+                    <th class="rotate position-relative border-start border-end" colspan="3">
+                        <div class="position-absolute bottom-0 start-0">
+                            <span class="">{{ c.name }}</span>
+                        </div>
+                    </th>
+                    }
+                </tr>
+                <tr>
+                    @for (c of characters; track c.name) {
+                    <th class="text-center border-start border-end">F</th>
+                    <th class="text-center border-start border-end">R</th>
+                    <th class="text-center border-start border-end">V</th>
+                    }
+                </tr>
+            </thead>
+            <tbody class="table-group-divider tbody-bordered">
+                @for (row of data; track $index) {
+                @if (!$last) {
+                <tr class="">
+                    <td>{{ row.name }}</td>
+                    @for (v of row.data; track $index) {
+                    <td class="text-center border-start border-end"
+                        [ngClass]="{'text-bg-success': v === 'C', 'text-bg-warning': v === 'I', 'text-bg-dark': v === ''}">
+                        {{ v }}</td>
+                    }
+                </tr>
+                }
+                @else {
+                    <tr class="">
+                        <td>{{ row.name }}</td>
+                        @for (v of row.data; track $index) {
+                        <td class="text-center border-start border-end"
+                            [ngClass]="{'text-bg-success': v == num_heroic_AAs[$index % 3],'text-bg-warning': v != num_heroic_AAs[$index % 3]}">
+                            {{ v }}/{{ num_heroic_AAs[$index % 3] }}</td>
+                        }
+                    </tr>
+                }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
