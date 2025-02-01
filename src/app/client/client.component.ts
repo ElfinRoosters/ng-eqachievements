@@ -40,6 +40,11 @@ export class ClientComponent implements OnInit, OnChanges {
     this.achievement$ = id;
   };
 
+  @Input()
+  set task(id: string) {
+    this.logger.log('taskId:', id);
+  };
+
   getCategoryName(categoryID: string) {
     return this.gameData.getCategory(parseInt(categoryID));
   }
@@ -80,9 +85,7 @@ export class ClientComponent implements OnInit, OnChanges {
     //this.logger.log('d:', d);
 
     const e = this.gameData.getClients(d);
-    if (this.category$ === '80') {
-    this.logger.log('e:', e);
-    }
+    //this.logger.log('e:', e);
 
     var lastName = "";
     for (const [ridx, ac] of e.entries()) {
@@ -97,13 +100,19 @@ export class ClientComponent implements OnInit, OnChanges {
         'points': ac.points,
         'missing': 0,
         'completed': 0,
+        'components': 0,      
         'data': rdata
       };
+      const components = this.gameData.getComponents(ac.id);
+      if (components !== undefined) {
+        // this.logger.log('components:', components);
+        el.components = components.filter((ac) => ac.required < 3).length
+      }
 
       let idx = 0;
       this.characters.forEach((c) => {
         const state = (this.category$ === '80') ?
-          c.getState(this.category$, this.achievement$, String(el.id)) : 
+          c.getState(this.category$, this.achievement$, String(el.id)) :
           c.getState(this.category$, this.achievement$, String(el.id), String(el.id));
         if (state !== undefined) {
           rdata[idx] = state.state;
@@ -125,8 +134,6 @@ export class ClientComponent implements OnInit, OnChanges {
 
       if (el.missing > 0) {
         //this.logger.log('ac:', ac);
-        const components = this.gameData.getComponents(ac.id);
-        //this.logger.log('components:', components);
 
       }
       this.data.push(el);

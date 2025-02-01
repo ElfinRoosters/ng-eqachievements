@@ -123,6 +123,10 @@ export class GameDataService {
     return this.categories.get(categoryID);
   }
 
+  getComponent(componentID: number) {
+    return this.AchievementComponents.get(componentID);
+  }
+
   getCategoryID(category: string): string {
     for (const [id, acat] of this.categories.entries()) {
       if (acat.parentID !== undefined) { continue }
@@ -177,6 +181,10 @@ export class GameDataService {
       }
     });
     return data;
+  }
+
+  getClient(clientID: number) {
+    return this.clients.get(clientID);
   }
 
   getClientID(category1ID: string, category2ID: string, name: string): string {

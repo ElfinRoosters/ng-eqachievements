@@ -4,8 +4,15 @@
             <caption class="p-0">
                 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item">{{ getCategoryName(category$)?.name }}</li>
-                        <li class="breadcrumb-item">{{ getCategoryName(achievement$)?.name }}</li>
+                        <li class="breadcrumb-item">{{ getCategoryName(categoryID)?.name }}</li>
+                        <li class="breadcrumb-item">
+                            <a class="btn-custom text-reset text-decoration-none"
+                                [routerLink]="['/category',categoryID,'achievement',achievementID]"
+                                [skipLocationChange]="true" routerLinkActive="active">{{
+                                getCategoryName(achievementID)?.name }}
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ getClientName(clientID)?.name }}</li>
                     </ol>
                 </nav>
             </caption>
@@ -23,16 +30,18 @@
                     <th class="col-1 text-center">Completed</th>
                 </tr>
             </thead>
+            @if (data.length == 0) {
+            <tbody class="table-group-divider tbody-bordered">
+                <tr>
+                    <td [attr.colspan]="3 + characters.size" class="fs-2 text-center text-warning">No Data</td>
+                </tr>
+            </tbody>
+            }
+            @else {
             <tbody class="table-group-divider tbody-bordered">
                 @for (row of data; track $index) {
                 <tr class="">
-                    <td>
-                        <button type="button" class="btn btn-custom py-0 ps-1"
-                            [routerLink]="['/category',category$,'task',row.id,'achievement',achievement$]"
-                            [skipLocationChange]="true" routerLinkActive="active">{{ row.name }}
-                        </button>
-                        ({{ row.points }} Points) (num: {{ row.components}})
-                    </td>
+                    <td>{{ row.name }}</td>
                     <td class="text-center">{{ row.missing | number }}</td>
                     @for (v of row.data; track $index) {
                     <td class="text-center border-start border-end p-0">
@@ -46,6 +55,7 @@
                 </tr>
                 }
             </tbody>
+            }
         </table>
     </div>
 </div>
