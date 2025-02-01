@@ -119,6 +119,10 @@ export class GameDataService {
     ));
   }
 
+  getCategory(categoryID: number) {
+    return this.categories.get(categoryID);
+  }
+
   getCategoryID(category: string): string {
     for (const [id, acat] of this.categories.entries()) {
       if (acat.parentID !== undefined) { continue }

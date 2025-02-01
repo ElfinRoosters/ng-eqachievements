@@ -1,15 +1,13 @@
 <div class="custom-max">
     <div class="h-100 overflow-y-scroll overflow-x-hidden">
         <table class="table table-fixed table-dark caption-top">
-            <caption>
-                <div class="row">
-                <div class="col-6">
-                    Category ID: {{ category$ }}
-                </div>
-                <div class="col-6">
-                    Achievement ID: {{ achievement$ }}
-                </div>
-                </div>
+            <caption class="p-0">
+                <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">{{ getCategoryName(category$)?.name }}</li>
+                        <li class="breadcrumb-item">{{ getCategoryName(achievement$)?.name }}</li>
+                    </ol>
+                </nav>
             </caption>
             <thead class="table-header" scope="col">
                 <tr>

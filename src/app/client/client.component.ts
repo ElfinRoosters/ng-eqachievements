@@ -38,6 +38,10 @@ export class ClientComponent implements OnInit, OnChanges {
     this.achievement$ = id;
   };
 
+  getCategoryName(categoryID: string) {
+    return this.gameData.getCategory(parseInt(categoryID));
+  }
+
   ngOnInit(): void {
     this.logger.log('ngOnInit()');
     this.characters.clear();
