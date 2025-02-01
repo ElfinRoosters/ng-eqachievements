@@ -18,6 +18,8 @@ export class ClientComponent implements OnInit, OnChanges {
   private readonly gameData = inject(GameDataService);
   private readonly logger = inject(ConsoleLogService);
 
+  private readonly MAX_LEVEL = 125;
+
   hasFilesLoaded = computed(() => this.dataService.isDataLoaded());
 
   category$!: string;
@@ -78,9 +80,13 @@ export class ClientComponent implements OnInit, OnChanges {
     //this.logger.log('d:', d);
 
     const e = this.gameData.getClients(d);
-    //this.logger.log('e:', e);
+    this.logger.log('e:', e);
 
+    var lastName = "";
     for (const [ridx, ac] of e.entries()) {
+      if (lastName === ac.name) { continue }
+      lastName = ac.name;
+
       const rdata = new Array(this.characters.size).fill("I");
       const el = {
         'id': ac.id,
@@ -122,6 +128,11 @@ export class ClientComponent implements OnInit, OnChanges {
       if (this.achievement$ === '11') {
         if (el.completed == 0) {
           break
+        }
+      }
+      if (this.achievement$ === '13') {
+        if (ac.id == this.MAX_LEVEL) {
+          break;
         }
       }
     }
