@@ -101,15 +101,16 @@ export class ClientComponent implements OnInit, OnChanges {
       let idx = 0;
       this.characters.forEach((c) => {
         const state = c.data.get(this.category$)?.get(this.achievement$)?.get(String(el.id))?.get(String(el.id));
-        if (state === undefined) { return; }
-        rdata[idx] = state.state;
-        //this.logger.log('rdata[%d] = "%s"', idx, JSON.stringify(state.state));
-        if (state.state === 'C') {
-          el.completed++;
-        }
-        else {
-          //this.logger.log('state:', state);
-          el.missing++;
+        if (state !== undefined) {
+          rdata[idx] = state.state;
+          //this.logger.log('rdata[%d] = "%s"', idx, JSON.stringify(state.state));
+          if (state.state === 'C') {
+            el.completed++;
+          }
+          else {
+            //this.logger.log('state:', state);
+            el.missing++;
+          }
         }
         idx++;
       });
@@ -118,7 +119,7 @@ export class ClientComponent implements OnInit, OnChanges {
         //this.logger.log('ac:', ac);
         const components = this.gameData.getComponents(ac.id);
         //this.logger.log('components:', components);
-  
+
       }
       this.data.push(el);
       //this.logger.log('el.data: %s', JSON.stringify(el.data));
