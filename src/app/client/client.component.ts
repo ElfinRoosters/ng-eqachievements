@@ -81,7 +81,6 @@ export class ClientComponent implements OnInit, OnChanges {
     //this.logger.log('e:', e);
 
     for (const [ridx, ac] of e.entries()) {
-
       const rdata = new Array(this.characters.size).fill("I");
       const el = {
         'id': ac.id,
@@ -117,7 +116,14 @@ export class ClientComponent implements OnInit, OnChanges {
       }
       this.data.push(el);
       //this.logger.log('el.data: %s', JSON.stringify(el.data));
-    }
 
+      // For General > Advancement, don't display any achievements after 
+      // the last one none have completed.
+      if (this.achievement$ === '11') {
+        if (el.completed == 0) {
+          break
+        }
+      }
+    }
   }
 }
