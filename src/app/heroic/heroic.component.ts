@@ -88,19 +88,20 @@ export class HeroicComponent extends AchievementData implements OnInit {
             // R: Resolution
             if (aas.includes('F')) {
               rdata[idx] = state.state;
-              if (state.state === 'C') { totalAAs[cidx+0]++ }
+              if (state.state === 'C') { totalAAs[cidx*3+0]++ }
             }
             idx++;
             if (aas.includes('R')) {
               rdata[idx] = state.state;
-              if (state.state === 'C') { totalAAs[cidx+1]++ }
+              if (state.state === 'C') { totalAAs[cidx*3+1]++ }
             }
             idx++;
             if (aas.includes('V')) {
               rdata[idx] = state.state;
-              if (state.state === 'C') { totalAAs[cidx+2]++ }
+              if (state.state === 'C') { totalAAs[cidx*3+2]++ }
             }
             idx++;
+            cidx++;
           }
 
           this.data.push(el);
