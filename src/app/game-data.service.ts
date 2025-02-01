@@ -108,6 +108,15 @@ export class GameDataService {
         aacd.get(row[3] as number)
       ));
     });
+    this.addCustomAchievements();
+  }
+
+  addCustomAchievements() {
+    const heroicAAsID = 10000;
+
+    this.categories.set(heroicAAsID, new AchievementCategory(
+      heroicAAsID, "Heroic AAs", 9, "General Achievements: Heroic AAs", 10
+    ));
   }
 
   getCategoryID(category: string): string {

@@ -13,10 +13,18 @@
                             <ul class="list-unstyled">
                                 @for (cat of item.children ; track cat) {
                                 <li class="list-group-item">
+                                    @if (cat.id < 10000) {
                                     <button type="button"
                                         class="list-group-item list-group-item-action btn btn-custom text-secondary"
                                         [routerLink]="['/category',item.id,'achievement',cat.id]"
                                         [skipLocationChange]="true" routerLinkActive="active">{{ cat.name }}</button>
+                                    }
+                                    @else {
+                                        <button type="button"
+                                        class="list-group-item list-group-item-action btn btn-custom text-secondary"
+                                        [routerLink]="['/category',item.id,'heroic']"
+                                        [skipLocationChange]="true" routerLinkActive="active">{{ cat.name }}</button>
+                                    }
                                 </li>
                                 }
                             </ul>

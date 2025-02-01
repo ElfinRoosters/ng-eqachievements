@@ -1,5 +1,5 @@
 export class AchievementData {
-    heroicAAs = new Map([
+    public heroicAAs = new Map([
         ['Call of the Forsaken', new Map([
             ['Conquests', new Map([
                 ['Savior of West Karana (Ethernere)', 'VF'],
@@ -212,7 +212,7 @@ export class AchievementData {
         ])],
     ]);
 
-    heroicAANameMap = new Map([
+    public heroicAANameMap = new Map([
         ['F', "AA: Hero's Fortitude"],
         ['R', "AA: Hero's Resolution"],
         ['V', "AA: Hero's Vitality"],
@@ -229,7 +229,7 @@ export class AchievementData {
     // Legacy of Ykesha: Hunter
     // I       Hunter of The Caverns of Exile
     //
-    nameReMap = new Map([
+    public nameReMap = new Map([
         ['Legacy of Ykesha', new Map([
             ['General', new Map([
                 ['Pirate Slayer', new Map([

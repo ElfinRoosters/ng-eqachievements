@@ -1,6 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, GuardResult, MaybeAsync, Router, RouterStateSnapshot } from '@angular/router';
-import { AchievementData } from './achievement-data';
 import { GameDataService } from './game-data.service';
 import { ConsoleLogService } from './console-log.service';
 
@@ -23,7 +22,7 @@ export class AchievementFile {
 @Injectable({
   providedIn: 'root'
 })
-export class AchievementDataService extends AchievementData implements CanActivate {
+export class AchievementDataService implements CanActivate {
   private readonly router = inject(Router);
   private readonly gamedata = inject(GameDataService);
   private readonly logger = inject(ConsoleLogService);
