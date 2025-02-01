@@ -66,9 +66,9 @@ export class ClientComponent implements OnInit, OnChanges {
     this.logger.log('refreshTableData()');
     this.data.length = 0;
 
-    this.logger.log('category$: ', this.category$);
-    this.logger.log('achievement$: ', this.achievement$);
-    this.logger.log('characters:', this.characters);
+    //this.logger.log('category$: ', this.category$);
+    //this.logger.log('achievement$: ', this.achievement$);
+    //this.logger.log('characters:', this.characters);
 
     const d = this.gameData.getClientIDsForAchievement(this.achievement$);
     //this.logger.log('d:', d);
@@ -99,14 +99,14 @@ export class ClientComponent implements OnInit, OnChanges {
           el.completed++;
         }
         else {
-          this.logger.log('state:', state);
+          //this.logger.log('state:', state);
           el.missing++;
         }
         idx++;
       });
 
       if (el.missing > 0) {
-        this.logger.log('ac:', ac);
+        //this.logger.log('ac:', ac);
         const components = this.gameData.getComponents(ac.id);
         //this.logger.log('components:', components);
   

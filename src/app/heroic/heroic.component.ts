@@ -4,10 +4,11 @@ import { AchievementDataService, EQCharacter } from '../achievement-data.service
 import { GameDataService } from '../game-data.service';
 import { ConsoleLogService } from '../console-log.service';
 import { AchievementData } from '../achievement-data';
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-heroic',
-  imports: [CommonModule],
+  imports: [CommonModule, NgbTooltipModule],
   templateUrl: './heroic.component.html',
   styleUrl: './heroic.component.sass'
 })
@@ -39,18 +40,15 @@ export class HeroicComponent extends AchievementData implements OnInit {
 
     this.data.length = 0;
 
-    this.logger.log('category$: ', this.category$);
-    this.logger.log('characters:', this.characters);
-
     const totalAAs = new Array(this.characters.size * 3).fill(0);
 
     for (const [category, cdata] of this.heroicAAs.entries()) {
-      this.logger.log('category: %s', category);
+      //this.logger.log('category: %s', category);
       const categoryID = this.gameData.getCategoryID(category);
 
       for (const [subcategory, scdata] of cdata.entries()) {
         const subcategoryID = this.gameData.getAchievementID(category, subcategory);
-        this.logger.log('subcategory[%d]: %s', subcategoryID, subcategory);
+        //this.logger.log('subcategory[%d]: %s', subcategoryID, subcategory);
         const clientIDs = this.gameData.getClientIDsForAchievement(subcategoryID);
         const clients = this.gameData.getClients(clientIDs);
 

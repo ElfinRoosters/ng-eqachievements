@@ -185,8 +185,6 @@ export class GameDataService {
         return String(c.id);
       }
     }
-    this.logger.log('getClientID(%d, %d, "%s") has no entry', category1ID, category2ID, name);
-
     //this.logger.log('getClientID(%d, %d, "%s"): return: %d', category1ID, category2ID, name, clientID);
     return clientID;
   }

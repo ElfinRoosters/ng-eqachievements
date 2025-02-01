@@ -14,9 +14,9 @@
                 </tr>
                 <tr>
                     @for (c of characters; track c.name) {
-                    <th class="text-center border-start border-end">F</th>
-                    <th class="text-center border-start border-end">R</th>
-                    <th class="text-center border-start border-end">V</th>
+                    <th class="text-center border-start border-end p-0">F</th>
+                    <th class="text-center border-start border-end p-0">R</th>
+                    <th class="text-center border-start border-end p-0">V</th>
                     }
                 </tr>
             </thead>
@@ -24,21 +24,27 @@
                 @for (row of data; track $index) {
                 @if (!$last) {
                 <tr class="">
-                    <td>{{ row.name }}</td>
+                    <td class="text-nowrap p-0">{{ row.name }}</td>
                     @for (v of row.data; track $index) {
-                    <td class="text-center border-start border-end"
-                        [ngClass]="{'text-bg-success': v === 'C', 'text-bg-warning': v === 'I', 'text-bg-dark': v === ''}">
-                        {{ v }}</td>
+                    <td class="border-start border-end p-0">
+                        <div class="text-center" [ngClass]="{'text-bg-success': v === 'C', 'text-bg-warning': v === 'I', 'text-bg-dark': v === ''}">
+                        {{ v }}
+                    </div>
+                    </td>
                     }
                 </tr>
                 }
                 @else {
                     <tr class="">
-                        <td>{{ row.name }}</td>
+                        <td class="p-0">{{ row.name }}</td>
                         @for (v of row.data; track $index) {
-                        <td class="text-center border-start border-end"
-                            [ngClass]="{'text-bg-success': v == num_heroic_AAs[$index % 3],'text-bg-warning': v != num_heroic_AAs[$index % 3]}">
-                            {{ v }}/{{ num_heroic_AAs[$index % 3] }}</td>
+                        <td class="border-start border-end p-0">
+                            <div class="text-center" [ngClass]="{'text-bg-success': v == num_heroic_AAs[$index % 3],'text-bg-warning': v != num_heroic_AAs[$index % 3]}"
+                              placement="top" ngbTooltip="{{ v }}/{{ num_heroic_AAs[$index % 3] }}"
+                            >
+                            {{ v }}
+                            </div>
+                        </td>
                         }
                     </tr>
                 }
