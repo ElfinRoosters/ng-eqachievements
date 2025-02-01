@@ -10,6 +10,30 @@ export class EQCharacter {
     public server: string,
   ) { }
 
+  getTaskState(categoryID: string, subcategoryID: string, clientID: string, taskID: string) {
+    return this.data.get(categoryID)?.get(subcategoryID)?.get(clientID)?.get(taskID);
+  }
+
+  getState(categoryID: string, subcategoryID: string, clientID: string, taskID?: string) {
+    //console.log('getState(%s, %s, %s, %s)', categoryID, subcategoryID, clientID, taskID);
+    if (taskID !== undefined) {
+      return this.getTaskState(categoryID, subcategoryID, clientID, taskID);
+    }
+    if (categoryID !== '80') {
+      return this.getTaskState(categoryID, subcategoryID, clientID, clientID);
+    }
+
+    var state = {'state':'I','count':0,'total':0};
+    for(const [id, map] of this.data.get(categoryID)?.get(subcategoryID)?.get(clientID)) {
+      if (id === clientID) { continue; }
+      // console.log('id: %s, map: %s', id, JSON.stringify(map));
+      state = map;
+      break;
+    };
+    
+    //console.log('getState("%s","%s","%s"): returning: %s', categoryID, subcategoryID, clientID, JSON.stringify(state));
+    return state;
+  }
 }
 
 export class AchievementFile {
@@ -158,10 +182,10 @@ export class AchievementDataService implements CanActivate {
         // [LCI]\t\t
         var component = line.substring(3);
 
-        //this.logger.log('2: [' + achievement + ']');
+        //this.logger.log('2: [' + component + ']');
         const match = reUnfinished.exec(component);
         if (match) {
-          // this.logger.log("match: " + match[2] + "/" + match[3]);
+          //this.logger.log("match: " + match[2] + "/" + match[3]);
           component = match[1];
           count = parseInt(match[2]);
           total = parseInt(match[3]);
@@ -180,10 +204,10 @@ export class AchievementDataService implements CanActivate {
         }
         componentID = clientID;
       }
-      //this.logger.log('[%d,%d,%d,%d]: state=%s, count=%d, total=%d', category1ID,category2ID,clientID,componentID,state,count,total);
+      //this.logger.log('%s: [%d,%d,%d,%d]: state=%s, count=%d, total=%d', character.name, category1ID,category2ID,clientID,componentID,state,count,total);
       map.get(clientID).set(componentID, { 'state': state, 'count': count, 'total': total });
     }
 
-    this.logger.log('character:', character);
+    //this.logger.log('character:', character);
   }
 }

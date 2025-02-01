@@ -1,6 +1,6 @@
 <div class="custom-max">
     <div class="h-100 overflow-y-scroll overflow-x-hidden">
-        <table class="table table-fixed table-dark caption-top">
+        <table class="table table-sm table-bordered table-fixed table-dark caption-top">
             <caption class="p-0">
                 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
                     <ol class="breadcrumb">
@@ -29,8 +29,12 @@
                     <td>{{ row.name }} ({{ row.points }} Points)</td>
                     <td class="text-center">{{ row.missing | number }}</td>
                     @for (v of row.data; track $index) {
-                    <td class="text-center border-start border-end"
-                     [ngClass]="{'text-bg-success': v === 'C', 'text-bg-info': v !== 'C'}">{{ v }}</td>
+                    <td class="text-center border-start border-end p-0">
+                        <div class="text-center py-2"
+                            [ngClass]="{'text-bg-success': v === 'C', 'text-bg-warning': v !== 'C' && v !== '', 'text-bg-dark': v === ''}">
+                            {{ v }}
+                        </div>
+                    </td>
                     }
                     <td class="text-center">{{ row.completed | number }}</td>
                 </tr>

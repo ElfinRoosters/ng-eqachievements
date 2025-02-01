@@ -80,7 +80,9 @@ export class ClientComponent implements OnInit, OnChanges {
     //this.logger.log('d:', d);
 
     const e = this.gameData.getClients(d);
+    if (this.category$ === '80') {
     this.logger.log('e:', e);
+    }
 
     var lastName = "";
     for (const [ridx, ac] of e.entries()) {
@@ -100,16 +102,22 @@ export class ClientComponent implements OnInit, OnChanges {
 
       let idx = 0;
       this.characters.forEach((c) => {
-        const state = c.data.get(this.category$)?.get(this.achievement$)?.get(String(el.id))?.get(String(el.id));
+        const state = (this.category$ === '80') ?
+          c.getState(this.category$, this.achievement$, String(el.id)) : 
+          c.getState(this.category$, this.achievement$, String(el.id), String(el.id));
         if (state !== undefined) {
           rdata[idx] = state.state;
-          //this.logger.log('rdata[%d] = "%s"', idx, JSON.stringify(state.state));
           if (state.state === 'C') {
             el.completed++;
           }
           else {
             //this.logger.log('state:', state);
             el.missing++;
+            // Special case for Slayer:
+            // display the number remaining to complete this achievement.
+            if (this.category$ === '80' && state.count > 0) {
+              rdata[idx] = state.total - state.count;
+            }
           }
         }
         idx++;
