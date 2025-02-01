@@ -186,6 +186,8 @@ export class GameDataService {
     for (const clientID of clientIDs) {
       const c = this.clients.get(clientID);
       if (c?.name === name) {
+        if (c.id == 208180) { return "258180"; }
+        else if (c.id == 210880) { return "250880"; }
         return String(c.id);
       }
     }
@@ -193,8 +195,39 @@ export class GameDataService {
     return clientID;
   }
 
+  getEpicComponentID(category1ID: string, category2ID: string, clientID: string, component: string) {
+    let componentID = clientID;
+    const clientIDs = this.getClientIDsForAchievement(category2ID);
+    //this.logger.log('clientIDs: ', clientIDs);
+    const numClientID = parseInt(clientID);
+    const clientName = (clientID === '1001') ? 'Epic 1.0' :
+                       (clientID === '1501') ? 'Epic 1.5' :
+                       (clientID === '2001') ? 'Epic 2.0' :
+                       (clientID === '2501') ? 'Epic 2.5' :
+                       (clientID === '2600') ? 'An Epic Request' : 'An Epic Retelling';
+    //this.logger.log('clientID: %s -> %s', clientID, clientName);
+
+    const epicClients = this.getClients(clientIDs);
+
+    for (const epicClient of epicClients.filter((ac) => ac.name === clientName)) {
+      //this.logger.log('epicClient: ', epicClient);
+      const ac = this.AchievementComponents.get(epicClient.id)?.find((ac) => ac.name === component);
+      if (ac !== undefined) {
+        componentID = String(ac.id);
+        //this.logger.log('getEpicComponentID(%d, %d, %d, "%s") returns: %s', category1ID, category2ID, clientID, component, componentID);
+        break;
+      };
+    }
+
+    return componentID;
+  }
+
   getComponentID(category1ID: string, category2ID: string, clientID: string, component: string): string {
     let componentID = "";
+    // General > Class - requires special handling
+    if (category1ID === '10' && category2ID === '12') {
+      return this.getEpicComponentID(category1ID, category2ID, clientID, component);
+    }
 
     const ac = this.AchievementComponents.get(parseInt(clientID))?.find((ac) => ac.name === component);
     if (ac === undefined) {

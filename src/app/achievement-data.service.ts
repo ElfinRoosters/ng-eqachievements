@@ -93,7 +93,7 @@ export class AchievementDataService implements CanActivate {
 
       results.filter((result) => result.status === 'fulfilled').forEach(
         (result) => {
-          this.logger.log('result:', result);
+          //this.logger.log('result:', result);
           const lines = result.value.text.split(/[\r\n]+/).map((line) => line.trim());
           this.parseAchievements(result.value.eqCharacter, lines);
           this.characters.add(result.value.eqCharacter);
@@ -134,7 +134,7 @@ export class AchievementDataService implements CanActivate {
   }
 
   parseAchievements(character: EQCharacter, lines: string[]) {
-    this.logger.log('parseAchievements: character: ', character);
+    //this.logger.log('parseAchievements: character: ', character);
 
     // Locked / Completed / Incomplete
     const reAchievement = /^[LCI]\s/;
