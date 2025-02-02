@@ -57,13 +57,13 @@ export class ClientTaskComponent implements OnInit {
   }
 
   toggleCompleted() {
-    this.logger.log("showCompleted: %s -> %s", this.showCompleted(), !this.showCompleted());
+    //this.logger.log("showCompleted: %s -> %s", this.showCompleted(), !this.showCompleted());
     this.showCompleted.set(!this.showCompleted());
     return false;
   }
 
   ngOnInit(): void {
-    this.logger.log('ngOnInit()');
+    //this.logger.log('ngOnInit()');
     this.characters.clear();
     this.dataService.characters.forEach((a) => {
       this.characters.add(a);
@@ -73,7 +73,7 @@ export class ClientTaskComponent implements OnInit {
   }
 
   refreshTableData() {
-    this.logger.log('refreshTableData()');
+    //this.logger.log('refreshTableData()');
     this.data.length = 0;
 
     //this.logger.log('categoryID: ', this.categoryID);

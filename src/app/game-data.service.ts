@@ -239,7 +239,7 @@ export class GameDataService {
 
     const ac = this.AchievementComponents.get(parseInt(clientID))?.find((ac) => ac.name === component);
     if (ac === undefined) {
-      this.logger.log('getComponentID(%d, %d, %d, "%s") has no entry', category1ID, category2ID, clientID, component);
+      //this.logger.log('getComponentID(%d, %d, %d, "%s") has no entry', category1ID, category2ID, clientID, component);
     }
     else {
       componentID = String(ac.id);

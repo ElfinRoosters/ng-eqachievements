@@ -110,7 +110,7 @@ export class AchievementDataService implements CanActivate {
   onFileSelected($event: Event) {
     const element: HTMLInputElement = $event.target as HTMLInputElement;
     if (element.files === null) {
-      this.logger.log("element has no input type='file'?");
+      //this.logger.log("element has no input type='file'?");
       this.files.length = 0;
       return false;
     }
@@ -154,7 +154,7 @@ export class AchievementDataService implements CanActivate {
         // We have the category: sub-category
         const pos = line.indexOf(': ');
         if (pos < 0) {
-          this.logger.log("pos: %d, line: [%s]", pos, line);
+          //this.logger.log("pos: %d, line: [%s]", pos, line);
           continue;
         }
         [category1ID, category2ID] = this.gamedata.getCategoryPair(line.substring(0, pos), line.substring(pos + 2));
@@ -168,7 +168,7 @@ export class AchievementDataService implements CanActivate {
         continue;
       }
       if (category1ID.length < 1 || category2ID.length < 1 || typeof map !== 'object') {
-        this.logger.log('[%d,%d]: idx=%d %s', category1ID, category2ID, idx, line);
+        //this.logger.log('[%d,%d]: idx=%d %s', category1ID, category2ID, idx, line);
         continue;
       }
 

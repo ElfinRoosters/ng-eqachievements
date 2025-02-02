@@ -32,7 +32,7 @@ export class HeroicComponent extends AchievementData implements OnInit {
   };
 
   ngOnInit(): void {
-    this.logger.log('ngOnInit()');
+    //this.logger.log('ngOnInit()');
     this.characters.clear();
     this.dataService.characters.forEach((a) => {
       this.characters.add(a);
