@@ -17,13 +17,17 @@
                                     <button type="button"
                                         class="list-group-item list-group-item-action btn btn-custom text-secondary"
                                         [routerLink]="['/category',item.id,'achievement',cat.id]"
-                                        [skipLocationChange]="true" routerLinkActive="active">{{ cat.name }}</button>
+                                        [skipLocationChange]="true" routerLinkActive="active" 
+                                        placement="top" ngbTooltip="{{ cat.tooltip }}" [openDelay]="1000" triggers="hover"
+                                        >{{ cat.name }}</button>
                                     }
                                     @else {
                                         <button type="button"
                                         class="list-group-item list-group-item-action btn btn-custom text-secondary"
                                         [routerLink]="['/category',item.id,'heroic']"
-                                        [skipLocationChange]="true" routerLinkActive="active">{{ cat.name }}</button>
+                                        [skipLocationChange]="true" routerLinkActive="active"
+                                        placement="top" ngbTooltip="{{ cat.tooltip }}" [openDelay]="1000" triggers="hover"
+                                        >{{ cat.name }}</button>
                                     }
                                 </li>
                                 }
