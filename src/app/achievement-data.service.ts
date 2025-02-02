@@ -48,7 +48,7 @@ export class AchievementFile {
 })
 export class AchievementDataService implements CanActivate {
   private readonly router = inject(Router);
-  private readonly gamedata = inject(GameDataService);
+  private readonly gameData = inject(GameDataService);
   private readonly logger = inject(ConsoleLogService);
 
   isDataLoaded = signal(false);
@@ -157,7 +157,7 @@ export class AchievementDataService implements CanActivate {
           //this.logger.log("pos: %d, line: [%s]", pos, line);
           continue;
         }
-        [category1ID, category2ID] = this.gamedata.getCategoryPair(line.substring(0, pos), line.substring(pos + 2));
+        [category1ID, category2ID] = this.gameData.getCategoryPair(line.substring(0, pos), line.substring(pos + 2));
         if (!character.data.has(category1ID)) {
           character.data.set(category1ID, new Map<string, any>());
         }
@@ -192,13 +192,13 @@ export class AchievementDataService implements CanActivate {
           //this.logger.log("component: %s: %d/%d", component, count, total);
         }
         //this.logger.log("task: " + task);
-        componentID = this.gamedata.getComponentID(category1ID, category2ID, clientID, component);
+        componentID = this.gameData.getComponentID(category1ID, category2ID, clientID, component);
       }
       // client / achievement
       else if (line.charCodeAt(1) == 9) {
         // [LCI]\t
         //this.logger.log('1: [' + line.substring(2) + ']');
-        clientID = this.gamedata.getClientID(category1ID, category2ID, line.substring(2));
+        clientID = this.gameData.getClientID(category1ID, category2ID, line.substring(2));
         if (!map.has(clientID)) {
           map.set(clientID, new Map<string, any>());
         }
