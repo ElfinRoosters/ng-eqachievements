@@ -1,39 +1,43 @@
 <div class="custom-max">
     <div class="h-100 overflow-y-scroll overflow-x-hidden">
-        <table class="table table-sm table-bordered table-fixed table-dark caption-top">
-            <caption class="p-0">
-                <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb" class="navbar p-0">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">{{ getCategoryName(categoryID)?.name }}</li>
-                        <li class="breadcrumb-item">
-                            <a class="btn-custom text-reset text-decoration-none"
-                                [routerLink]="['/category',categoryID,'achievement',achievementID]"
-                                [skipLocationChange]="true" routerLinkActive="active">{{
-                                getCategoryName(achievementID)?.name }}
-                            </a>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ getClientName(clientID)?.name }}</li>
-                    </ol>
-                    <ol class="m-0">
-                        <li class="navbar">
-                            <button class="btn btn-outline-primary text-nowrap" (click)="toggleCompleted()">
-                                @if (showCompleted()) {
-                                Filter Completed
-                                }
-                                @else {
-                                Show Completed
-                                }
-                            </button>
-                        </li>
-                    </ol>
-                </nav>
-            </caption>
-            <thead class="table-header" scope="col">
-                <tr>
+        <table class="table table-sm table-bordered table-fixed table-dark">
+            <thead class="table-header box-shadow" scope="col">
+                <tr class="box-shadow ">
+                    <td [colSpan]="3 + characters.size">
+                        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb" class="navbar p-0">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">{{ getCategoryName(categoryID)?.name }}</li>
+                                <li class="breadcrumb-item">
+                                    <a class="btn-custom text-reset text-decoration-none"
+                                        [routerLink]="['/category',categoryID,'achievement',achievementID]"
+                                        [skipLocationChange]="true" routerLinkActive="active">{{
+                                        getCategoryName(achievementID)?.name }}
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    {{getClientName(clientID)?.name}}
+                                </li>
+                            </ol>
+                            <ol class="m-0">
+                                <li class="navbar">
+                                    <button class="btn btn-outline-primary text-nowrap" (click)="toggleCompleted()">
+                                        @if (showCompleted()) {
+                                        Filter Completed
+                                        }
+                                        @else {
+                                        Show Completed
+                                        }
+                                    </button>
+                                </li>
+                            </ol>
+                        </nav>
+                    </td>
+                </tr>
+                <tr class="">
                     <th class="col-5">Achievement</th>
                     <th class="col-1 text-center">Missing</th>
                     @for (c of characters; track c.name) {
-                    <th class="rotate position-relative border-start border-end">
+                    <th class="rotate position-relative">
                         <div class="position-absolute bottom-0 start-0">
                             <span class="">{{ c.name }}</span>
                         </div>

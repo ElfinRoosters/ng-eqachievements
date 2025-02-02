@@ -1,8 +1,8 @@
 <div class="custom-max">
     <div class="h-100 overflow-y-scroll overflow-x-hidden">
         <table class="table table-sm table-bordered table-fixed table-dark">
-            <thead class="table-header" scope="col">
-                <tr class="">
+            <thead class="table-header box-shadow" scope="col">
+                <tr class="box-shadow">
                     <td [colSpan]="3 + characters.size">
                         <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb" class="navbar p-0">
                             <ol class="breadcrumb">
@@ -24,7 +24,7 @@
                         </nav>
                     </td>
                 </tr>
-                <tr>
+                <tr class="">
                     <th class="col-5">Achievement</th>
                     <th class="col-1 text-center">Missing</th>
                     @for (c of characters; track c.name) {
@@ -42,7 +42,7 @@
                 <tr class="" [hidden]="row.completed == characters.size && !showCompleted()">
                     <td>
                         @if (row.components > 1) {
-                        <button type="button" class="btn btn-custom py-0 ps-1"
+                        <button type="button" class="btn btn-custom p-0 align-top"
                             [routerLink]="['/category',category$,'task',row.id,'achievement',achievement$]"
                             [skipLocationChange]="true" routerLinkActive="active">{{ row.name }}
                         </button>
