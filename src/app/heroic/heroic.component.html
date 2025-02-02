@@ -5,22 +5,22 @@
                 <tr>
                     <th class="col-5" rowspan="2">Achievement</th>
                     @for (c of characters; track c.name) {
-                    <th class="rotate position-relative border-start border-end" colspan="3">
+                    <th class="rotate position-relative border-0" colspan="3">
                         <div class="position-absolute bottom-0 start-0">
                             <span class="">{{ c.name }}</span>
                         </div>
                     </th>
                     }
                 </tr>
-                <tr>
+                <tr class="">
                     @for (c of characters; track c.name) {
-                    <th class="text-center border-start border-end p-0">F</th>
-                    <th class="text-center border-start border-end p-0">R</th>
-                    <th class="text-center border-start border-end p-0">V</th>
+                    <th class="text-center border-0 p-0">F</th>
+                    <th class="text-center border-0 p-0">R</th>
+                    <th class="text-center border-0 p-0">V</th>
                     }
                 </tr>
             </thead>
-            <tbody class="table-group-divider tbody-bordered">
+            <tbody class="tbody-bordered">
                 @for (row of data; track $index) {
                 @if (!$last) {
                 <tr class="">
