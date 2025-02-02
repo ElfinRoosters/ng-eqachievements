@@ -87,7 +87,7 @@ export class ClientTaskComponent implements OnInit {
       const rdata = new Array(this.characters.size).fill("I");
       const el = {
         'id': component.id,
-        'name': component.name,
+        'name': this.gameData.checkAchievementRename(component.name),
         'missing': 0,
         'completed': 0,
         'components': 0,

@@ -27,11 +27,16 @@
                 @for (row of data; track $index) {
                 <tr class="">
                     <td>
+                        @if (row.components > 1) {
                         <button type="button" class="btn btn-custom py-0 ps-1"
                             [routerLink]="['/category',category$,'task',row.id,'achievement',achievement$]"
                             [skipLocationChange]="true" routerLinkActive="active">{{ row.name }}
                         </button>
-                        ({{ row.points }} Points) (num: {{ row.components}})
+                        }
+                        @else {
+                            {{ row.name }}
+                        }
+                        ({{ row.points }} Points)
                     </td>
                     <td class="text-center">{{ row.missing | number }}</td>
                     @for (v of row.data; track $index) {

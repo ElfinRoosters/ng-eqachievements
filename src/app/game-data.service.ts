@@ -282,4 +282,27 @@ export class GameDataService {
     return data;
   }
 
+  checkAchievementRename(name: string) {
+    if (name.startsWith('Complete the achievement "')) {
+      let l = 'Complete the achievement "'.length;
+      if (name.endsWith('".')) {
+        return name.substring(l, name.length-2);
+      }
+      else if (name.endsWith('"')) {
+        return name.substring(l, name.length-1);
+      }
+    }
+    else if (name.startsWith('Complete "')) {
+      let l = 'Complete "'.length;
+      if (name.endsWith('".')) {
+        return name.substring(l, name.length-2);
+      }
+      else if (name.endsWith('"')) {
+        return name.substring(l, name.length-1);
+      }
+    }
+ 
+    return name;
+  }
+ 
 }
