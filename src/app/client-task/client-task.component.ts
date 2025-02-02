@@ -1,4 +1,4 @@
-import { Component, computed, inject, Input, OnInit } from '@angular/core';
+import { Component, computed, inject, Input, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AchievementDataService, EQCharacter } from '../achievement-data.service';
 import { ConsoleLogService } from '../console-log.service';
@@ -19,6 +19,7 @@ export class ClientTaskComponent implements OnInit {
   private readonly logger = inject(ConsoleLogService);
 
   private readonly MAX_LEVEL = 125;
+  showCompleted = signal(true);
 
   hasFilesLoaded = computed(() => this.dataService.isDataLoaded());
 
@@ -53,6 +54,12 @@ export class ClientTaskComponent implements OnInit {
 
   getClientName(id: string) {
     return this.gameData.getClient(parseInt(id));
+  }
+
+  toggleCompleted() {
+    this.logger.log("showCompleted: %s -> %s", this.showCompleted(), !this.showCompleted());
+    this.showCompleted.set(!this.showCompleted());
+    return false;
   }
 
   ngOnInit(): void {
@@ -103,7 +110,7 @@ export class ClientTaskComponent implements OnInit {
             el.completed++;
           }
           else {
-            //this.logger.log('state:', state);
+
             el.missing++;
             // Special case for Slayer:
             // display the number remaining to complete this achievement.

@@ -2,7 +2,7 @@
     <div class="h-100 overflow-y-scroll overflow-x-hidden">
         <table class="table table-sm table-bordered table-fixed table-dark caption-top">
             <caption class="p-0">
-                <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb" class="navbar p-0">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">{{ getCategoryName(categoryID)?.name }}</li>
                         <li class="breadcrumb-item">
@@ -13,6 +13,18 @@
                             </a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">{{ getClientName(clientID)?.name }}</li>
+                    </ol>
+                    <ol class="m-0">
+                        <li class="navbar">
+                            <button class="btn btn-outline-primary text-nowrap" (click)="toggleCompleted()">
+                                @if (showCompleted()) {
+                                Filter Completed
+                                }
+                                @else {
+                                Show Completed
+                                }
+                            </button>
+                        </li>
                     </ol>
                 </nav>
             </caption>
@@ -40,7 +52,7 @@
             @else {
             <tbody class="table-group-divider tbody-bordered">
                 @for (row of data; track $index) {
-                <tr class="">
+                <tr class="" [hidden]="row.completed == characters.size && !showCompleted()">
                     <td>{{ row.name }}</td>
                     <td class="text-center">{{ row.missing | number }}</td>
                     @for (v of row.data; track $index) {

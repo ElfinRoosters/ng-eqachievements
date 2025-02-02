@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, computed, inject, Input, OnChanges, OnInit, signal, SimpleChanges } from '@angular/core';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { AchievementDataService, EQCharacter } from '../achievement-data.service';
 import { GameDataService } from '../game-data.service';
@@ -19,6 +19,7 @@ export class ClientComponent implements OnInit, OnChanges {
   private readonly logger = inject(ConsoleLogService);
 
   private readonly MAX_LEVEL = 125;
+  showCompleted = signal(true);
 
   hasFilesLoaded = computed(() => this.dataService.isDataLoaded());
 
@@ -39,6 +40,12 @@ export class ClientComponent implements OnInit, OnChanges {
     //this.logger.log('achievementId:', id);
     this.achievement$ = id;
   };
+
+  toggleCompleted() {
+    this.logger.log("showCompleted: %s -> %s", this.showCompleted(), !this.showCompleted());
+    this.showCompleted.set(!this.showCompleted());
+    return false;
+  }
 
   getCategoryName(categoryID: string) {
     return this.gameData.getCategory(parseInt(categoryID));
@@ -66,6 +73,7 @@ export class ClientComponent implements OnInit, OnChanges {
       return;
     }
 
+    this.showCompleted.set(true);
     this.refreshTableData();
   }
   refreshTableData() {
