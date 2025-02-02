@@ -64,16 +64,16 @@ export class GameDataService {
 
   constructor() {
     AchievementCategoriesData.data.forEach((row) => {
-      this.categories.set(
-        row[2] as number,
-        new AchievementCategory(
-          row.at(2) as number,
-          row.at(3) as string,
-          row.at(1) as number,
-          row.at(4) as string,
-          row[0] != 0 ? row.at(0) as number : undefined
-        ));
-    });
+        this.categories.set(
+          row[2] as number,
+          new AchievementCategory(
+            row.at(2) as number,
+            row.at(3) as string,
+            row.at(1) as number,
+            row.at(4) as string,
+            row[0] != 0 ? row.at(0) as number : undefined
+          ));
+      });
 
     AchievementCategoryAssociationsClientData.data.forEach((row) => {
       const k = String(row[0]);
@@ -209,10 +209,10 @@ export class GameDataService {
     //this.logger.log('clientIDs: ', clientIDs);
     const numClientID = parseInt(clientID);
     const clientName = (clientID === '1001') ? 'Epic 1.0' :
-                       (clientID === '1501') ? 'Epic 1.5' :
-                       (clientID === '2001') ? 'Epic 2.0' :
-                       (clientID === '2501') ? 'Epic 2.5' :
-                       (clientID === '2600') ? 'An Epic Request' : 'An Epic Retelling';
+      (clientID === '1501') ? 'Epic 1.5' :
+        (clientID === '2001') ? 'Epic 2.0' :
+          (clientID === '2501') ? 'Epic 2.5' :
+            (clientID === '2600') ? 'An Epic Request' : 'An Epic Retelling';
     //this.logger.log('clientID: %s -> %s', clientID, clientName);
 
     const epicClients = this.getClients(clientIDs);
@@ -286,23 +286,23 @@ export class GameDataService {
     if (name.startsWith('Complete the achievement "')) {
       let l = 'Complete the achievement "'.length;
       if (name.endsWith('".')) {
-        return name.substring(l, name.length-2);
+        return name.substring(l, name.length - 2);
       }
       else if (name.endsWith('"')) {
-        return name.substring(l, name.length-1);
+        return name.substring(l, name.length - 1);
       }
     }
     else if (name.startsWith('Complete "')) {
       let l = 'Complete "'.length;
       if (name.endsWith('".')) {
-        return name.substring(l, name.length-2);
+        return name.substring(l, name.length - 2);
       }
       else if (name.endsWith('"')) {
-        return name.substring(l, name.length-1);
+        return name.substring(l, name.length - 1);
       }
     }
- 
+
     return name;
   }
- 
+
 }
