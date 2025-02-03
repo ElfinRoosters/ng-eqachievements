@@ -13,10 +13,10 @@
                     }
                 </tr>
                 <tr class="">
-                    @for (c of characters; track c.name) {
-                    <th class="text-center border-0 p-0">F</th>
-                    <th class="text-center border-0 p-0">R</th>
-                    <th class="text-center border-0 p-0">V</th>
+                    @for (c of characters; track $index) {
+                    <th class="text-center border-0 p-0"><div placement="top" ngbTooltip="Fortitude">F</div></th>
+                    <th class="text-center border-0 p-0"><div placement="top" ngbTooltip="Resolution">R</div></th>
+                    <th class="text-center border-0 p-0"><div placement="top" ngbTooltip="Vitality">V</div></th>
                     }
                 </tr>
             </thead>
