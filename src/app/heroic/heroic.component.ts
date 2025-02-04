@@ -37,7 +37,6 @@ export class HeroicComponent extends AchievementData implements OnInit {
   }
 
   toggleCompleted() {
-    this.logger.log("showCompleted: %s -> %s", this.showCompleted(), !this.showCompleted());
     this.showCompleted.set(!this.showCompleted());
     return false;
   }

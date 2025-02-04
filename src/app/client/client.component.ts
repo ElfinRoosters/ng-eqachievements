@@ -42,7 +42,6 @@ export class ClientComponent implements OnInit, OnChanges {
   };
 
   toggleCompleted() {
-    this.logger.log("showCompleted: %s -> %s", this.showCompleted(), !this.showCompleted());
     this.showCompleted.set(!this.showCompleted());
     return false;
   }
