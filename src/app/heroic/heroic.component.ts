@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, Input, OnInit } from '@angular/core';
+import { Component, computed, inject, Input, OnInit, signal } from '@angular/core';
 import { AchievementDataService, EQCharacter } from '../achievement-data.service';
 import { GameDataService } from '../game-data.service';
 import { ConsoleLogService } from '../console-log.service';
@@ -18,6 +18,7 @@ export class HeroicComponent extends AchievementData implements OnInit {
   private readonly logger = inject(ConsoleLogService);
 
   hasFilesLoaded = computed(() => this.dataService.isDataLoaded());
+  showCompleted = signal(true);
 
   category$!: string;
 
@@ -30,6 +31,16 @@ export class HeroicComponent extends AchievementData implements OnInit {
     //this.logger.log('categoryId:', id);
     this.category$ = id;
   };
+
+  getCategoryName(categoryID: string) {
+    return this.gameData.getCategory(parseInt(categoryID));
+  }
+
+  toggleCompleted() {
+    this.logger.log("showCompleted: %s -> %s", this.showCompleted(), !this.showCompleted());
+    this.showCompleted.set(!this.showCompleted());
+    return false;
+  }
 
   ngOnInit(): void {
     //this.logger.log('ngOnInit()');
@@ -79,6 +90,7 @@ export class HeroicComponent extends AchievementData implements OnInit {
           let idx = 0;
           let cidx = 0;
           for (const c of this.characters) {
+            let has_completed = 0;
             const state = c.data.get(categoryID)?.get(subcategoryID).get(String(ac.id)).get(String(ac.id));
             // this.logger.log('c.name: ', c.name, ', state: ', state);
             // V: Vitality
@@ -86,17 +98,20 @@ export class HeroicComponent extends AchievementData implements OnInit {
             // R: Resolution
             if (aas.includes('F')) {
               rdata[idx] = state.state;
-              if (state.state === 'C') { totalAAs[cidx*3+0]++ }
+              if (state.state === 'C') { totalAAs[cidx*3+0]++; has_completed++; }
             }
             idx++;
             if (aas.includes('R')) {
               rdata[idx] = state.state;
-              if (state.state === 'C') { totalAAs[cidx*3+1]++ }
+              if (state.state === 'C') { totalAAs[cidx*3+1]++; has_completed++; }
             }
             idx++;
             if (aas.includes('V')) {
               rdata[idx] = state.state;
-              if (state.state === 'C') { totalAAs[cidx*3+2]++ }
+              if (state.state === 'C') { totalAAs[cidx*3+2]++; has_completed++; }
+            }
+            if (has_completed) {
+              el.completed ++;
             }
             idx++;
             cidx++;

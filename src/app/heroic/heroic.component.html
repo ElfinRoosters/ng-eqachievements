@@ -1,12 +1,34 @@
 <div class="custom-max">
     <div class="h-100 overflow-y-scroll overflow-x-auto">
-        <table class="table table-sm table-fixed table-dark">
-            <thead class="table-header" scope="col">
+        <table class="table table-sm table-bordered table-fixed table-dark">
+            <thead class="table-header box-shadow" scope="col">
+                <tr class="box-shadow">
+                    <td [colSpan]="1 + characters.size * 3">
+                        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb" class="navbar p-0">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">{{ getCategoryName(category$)?.name }}</li>
+                                <li class="breadcrumb-item">Heroic AAs</li>
+                            </ol>
+                            <ol class="m-0">
+                                <li class="navbar">
+                                    <button class="btn btn-outline-primary text-nowrap" (click)="toggleCompleted()">
+                                        @if (showCompleted()) {
+                                        Filter Completed
+                                        }
+                                        @else {
+                                        Show Completed
+                                        }
+                                    </button>
+                                </li>
+                            </ol>
+                        </nav>
+                    </td>
+                </tr>
                 <tr>
                     <th class="col-5" rowspan="2">Achievement</th>
                     @for (c of characters; track c.name) {
-                    <th class="rotate position-relative border-0" colspan="3">
-                        <div class="position-absolute bottom-0 start-0">
+                    <th class="border-0" colspan="3">
+                        <div class="text-center">
                             <span class="">{{ c.name }}</span>
                         </div>
                     </th>
@@ -23,7 +45,7 @@
             <tbody class="tbody-bordered">
                 @for (row of data; track $index) {
                 @if (!$last) {
-                <tr class="">
+                <tr class="" [hidden]="row.completed == characters.size && !showCompleted()">
                     <td class="text-nowrap p-0">{{ row.name }}</td>
                     @for (v of row.data; track $index) {
                     <td class="border-start border-end p-0">
