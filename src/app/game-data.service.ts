@@ -183,6 +183,11 @@ export class GameDataService {
     return data;
   }
 
+  getClientsForAchievement(aid: string) {
+    let clientIDs = this.getClientIDsForAchievement(aid);
+    return this.getClients(clientIDs);
+  }
+
   getClient(clientID: number) {
     return this.clients.get(clientID);
   }

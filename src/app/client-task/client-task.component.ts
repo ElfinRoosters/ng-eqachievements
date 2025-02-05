@@ -1,4 +1,4 @@
-import { Component, computed, inject, Input, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, Input, OnChanges, OnInit, signal, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AchievementDataService, EQCharacter } from '../achievement-data.service';
 import { ConsoleLogService } from '../console-log.service';
@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './client-task.component.html',
   styleUrl: './client-task.component.sass'
 })
-export class ClientTaskComponent implements OnInit {
+export class ClientTaskComponent implements OnInit, OnChanges {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly dataService = inject(AchievementDataService);
@@ -72,6 +72,10 @@ export class ClientTaskComponent implements OnInit {
     this.refreshTableData();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    this.refreshTableData();
+  }
+
   refreshTableData() {
     //this.logger.log('refreshTableData()');
     this.data.length = 0;
@@ -80,6 +84,9 @@ export class ClientTaskComponent implements OnInit {
     //this.logger.log('achievementID: ', this.achievementID);
     //this.logger.log('clientID:', this.clientID);
     //this.logger.log('characters:', this.characters);
+
+    const clients = this.gameData.getClientsForAchievement(this.achievementID);
+    //this.logger.log('clients:', clients);
 
     const components = this.gameData.getComponents(parseInt(this.clientID));
     if (components === undefined) {
@@ -90,6 +97,7 @@ export class ClientTaskComponent implements OnInit {
 
     for (const [tidx, component] of components.entries()) {
       if (component.required == 3) { continue }
+      const client = clients.find((ac) => ac.name === component.name);
 
       const rdata = new Array(this.characters.size).fill("I");
       const el = {
@@ -98,8 +106,14 @@ export class ClientTaskComponent implements OnInit {
         'missing': 0,
         'completed': 0,
         'components': 0,
+        'points': 0,
         'data': rdata
       };
+      if (client !== undefined) {
+        el.points = client.points;
+        el.components = 1;
+        el.id = client.id;
+      }
 
       let idx = 0;
       this.characters.forEach((c) => {

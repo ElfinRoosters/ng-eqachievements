@@ -83,14 +83,14 @@ export class ClientComponent implements OnInit, OnChanges {
     //this.logger.log('achievement$: ', this.achievement$);
     //this.logger.log('characters:', this.characters);
 
-    const d = this.gameData.getClientIDsForAchievement(this.achievement$);
-    //this.logger.log('d:', d);
+    const clientIDs = this.gameData.getClientIDsForAchievement(this.achievement$);
+    //this.logger.log('clientIDs:', clientIDs);
 
-    const e = this.gameData.getClients(d);
-    //this.logger.log('e:', e);
+    const clients = this.gameData.getClients(clientIDs);
+    //this.logger.log('clients:', clients);
 
     var lastName = "";
-    for (const [ridx, ac] of e.entries()) {
+    for (const [ridx, ac] of clients.entries()) {
       if (lastName === ac.name) { continue }
       lastName = ac.name;
 
