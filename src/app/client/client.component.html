@@ -9,10 +9,12 @@
                                 <li class="breadcrumb-item">{{ getCategoryName(category$)?.name }}</li>
                                 <li class="breadcrumb-item">
                                     {{ getCategoryName(achievement$)?.name }}
+                                    @if (getCategoryName(achievement$)?.name === 'Collections') {
                                     <button type="button" class="btn btn-custom p-0 align-top"
                                         [routerLink]="['/category',category$,'collect',achievement$]"
                                         [skipLocationChange]="true" routerLinkActive="active">(all items)
                                     </button>
+                                    }
                                 </li>
                             </ol>
                             <ol class="m-0">
