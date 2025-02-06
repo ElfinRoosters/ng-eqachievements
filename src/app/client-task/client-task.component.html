@@ -59,14 +59,17 @@
                 <tr class="" [hidden]="row.completed == characters.size && !showCompleted()">
                     <td>
                         @if (row.components > 0) {
-                            <button type="button" class="btn btn-custom p-0 align-top"
-                                [routerLink]="['/category',categoryID,'task',row.id,'achievement',achievementID]"
-                                [skipLocationChange]="true" routerLinkActive="active">{{ row.name }}
-                            </button>
-                            }
-                            @else {
-                            {{ row.name }}
-                            }
+                        <button type="button" class="btn btn-custom p-0 align-top"
+                            [routerLink]="['/category',categoryID,'task',row.id,'achievement',achievementID]"
+                            [skipLocationChange]="true" routerLinkActive="active">{{ row.name }}
+                        </button>
+                        }
+                        @else {
+                        {{ row.name }}
+                        }
+                        @if (row.points > 0) {
+                        ({{ row.points }} Points)
+                        }
                     </td>
                     <td class="text-center">{{ row.missing | number }}</td>
                     @for (v of row.data; track $index) {
